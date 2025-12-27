@@ -8,21 +8,22 @@ interface Props {
 
 const { slug, section = "www" } = Astro.props;
 const nav = section === "www" ? getNavigation(slug) : null;
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
 ---
 
 <nav class="www-nav">
   {nav?.prev ? (
-    <a href={`/www/${nav.prev.slug}`} class="prev">{nav.prev.slug}</a>
+    <a href={`${base}www/${nav.prev.slug}`} class="prev">{nav.prev.slug}</a>
   ) : (
-    <a href="/" class="prev">home</a>
+    <a href={base} class="prev">home</a>
   )}
 
   <span class="current">
-    <a href="/">crosssections</a> &gt; <a href="/www/">www</a> &gt; {slug}
+    <a href={base}>crosssections</a> &gt; <a href={`${base}www/`}>www</a> &gt; {slug}
   </span>
 
   {nav?.next ? (
-    <a href={`/www/${nav.next.slug}`} class="next">{nav.next.slug}</a>
+    <a href={`${base}www/${nav.next.slug}`} class="next">{nav.next.slug}</a>
   ) : (
     <span class="next" style="opacity: 0.3">end</span>
   )}
