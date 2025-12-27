@@ -1,0 +1,188 @@
+/* ============================================
+   CSS PRIMITIVES ANATOMICAL EXPOSE
+   Minimal layout only - NO element styling
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+}
+
+/* Sticky header */
+.expose-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid #ccc;
+}
+
+.expose-header > div {
+  flex: 1;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.header-light {
+  background: #fff;
+  color: #333;
+}
+
+.header-dark {
+  background: #0d0d0d;
+  color: #e5e5e5;
+}
+
+/* Main container */
+.expose {
+  width: 100%;
+}
+
+/* Each section row */
+.row {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+/* Each cell (light or dark) */
+.cell {
+  flex: 1;
+  padding: 2rem;
+  min-width: 0;
+}
+
+.cell.light {
+  background: #ffffff;
+  color: #1a1a1a;
+  color-scheme: light;
+}
+
+.cell.dark {
+  background: #0d0d0d;
+  color: #e5e5e5;
+  color-scheme: dark;
+}
+
+/* Section title */
+.section-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.8;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+/* CSS property labels */
+.css-label {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* Element group container */
+.element-group {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px dashed currentColor;
+  border-radius: 4px;
+  opacity: 0.4;
+}
+
+.element-group:hover {
+  opacity: 1;
+}
+
+/* Group label */
+.group-label {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+/* States row */
+.states-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Input grid */
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.input-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.input-item label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Display demo blocks */
+.display-demo {
+  padding: 0.5rem;
+  border: 1px dotted currentColor;
+  margin: 0.25rem 0;
+}
+
+.display-demo.inline {
+  display: inline;
+  margin: 0 0.25rem;
+}
+
+/* Color swatch grid */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.color-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.color-swatch-box {
+  height: 40px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+
+.color-swatch-label {
+  font-size: 0.65rem;
+  font-family: ui-monospace, monospace;
+  opacity: 0.7;
+}
