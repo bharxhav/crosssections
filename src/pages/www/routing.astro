@@ -1,0 +1,308 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="Routing" subtitle="Network layer path selection — how packets find their way" slug="routing">
+  <!-- Hop-by-Hop Visualization -->
+  <section class="section">
+    <h2>Hop-by-Hop Path <span class="spec-label">traceroute</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 500 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- Source -->
+        <rect x="10" y="40" width="60" height="40" class="filled" stroke-width="1"/>
+        <text x="40" y="65" text-anchor="middle">Source</text>
+        <text x="40" y="95" text-anchor="middle" class="label">192.168.1.10</text>
+
+        <!-- Hop 1 -->
+        <line x1="70" y1="60" x2="100" y2="60" stroke-width="1"/>
+        <polygon points="95,56 105,60 95,64" fill="currentColor"/>
+        <rect x="105" y="40" width="60" height="40" rx="8" class="filled" stroke-width="1"/>
+        <text x="135" y="65" text-anchor="middle">Router</text>
+        <text x="135" y="30" text-anchor="middle" class="label">Hop 1</text>
+        <text x="135" y="95" text-anchor="middle" class="label">192.168.1.1</text>
+
+        <!-- Hop 2 -->
+        <line x1="165" y1="60" x2="195" y2="60" stroke-width="1"/>
+        <polygon points="190,56 200,60 190,64" fill="currentColor"/>
+        <rect x="200" y="40" width="60" height="40" rx="8" class="filled" stroke-width="1"/>
+        <text x="230" y="65" text-anchor="middle">Router</text>
+        <text x="230" y="30" text-anchor="middle" class="label">Hop 2</text>
+        <text x="230" y="95" text-anchor="middle" class="label">10.0.0.1</text>
+
+        <!-- Hop 3 -->
+        <line x1="260" y1="60" x2="290" y2="60" stroke-width="1"/>
+        <polygon points="285,56 295,60 285,64" fill="currentColor"/>
+        <rect x="295" y="40" width="60" height="40" rx="8" class="filled" stroke-width="1"/>
+        <text x="325" y="65" text-anchor="middle">Router</text>
+        <text x="325" y="30" text-anchor="middle" class="label">Hop 3</text>
+        <text x="325" y="95" text-anchor="middle" class="label">72.14.215.1</text>
+
+        <!-- Destination -->
+        <line x1="355" y1="60" x2="385" y2="60" stroke-width="1"/>
+        <polygon points="380,56 390,60 380,64" fill="currentColor"/>
+        <rect x="390" y="40" width="80" height="40" class="filled" stroke-width="1"/>
+        <text x="430" y="65" text-anchor="middle">Destination</text>
+        <text x="430" y="95" text-anchor="middle" class="label">142.250.80.46</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">$ traceroute example.com
+ 1  192.168.1.1     1.234 ms
+ 2  10.0.0.1        8.567 ms
+ 3  72.14.215.1    12.891 ms
+ 4  142.250.80.46  15.234 ms</pre>
+  </section>
+
+  <!-- Routing Table -->
+  <section class="section">
+    <h2>Routing Table <span class="spec-label">netstat -rn</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- Table header -->
+        <rect x="10" y="10" width="460" height="25" class="filled" stroke-width="1"/>
+        <text x="80" y="27" text-anchor="middle" style="font-weight:600">Destination</text>
+        <text x="190" y="27" text-anchor="middle" style="font-weight:600">Gateway</text>
+        <text x="300" y="27" text-anchor="middle" style="font-weight:600">Interface</text>
+        <text x="400" y="27" text-anchor="middle" style="font-weight:600">Metric</text>
+
+        <!-- Row 1 -->
+        <rect x="10" y="40" width="460" height="25" stroke-width="1"/>
+        <text x="80" y="57" text-anchor="middle">0.0.0.0/0</text>
+        <text x="190" y="57" text-anchor="middle">192.168.1.1</text>
+        <text x="300" y="57" text-anchor="middle">eth0</text>
+        <text x="400" y="57" text-anchor="middle">100</text>
+
+        <!-- Row 2 -->
+        <rect x="10" y="65" width="460" height="25" stroke-width="1"/>
+        <text x="80" y="82" text-anchor="middle">192.168.1.0/24</text>
+        <text x="190" y="82" text-anchor="middle">0.0.0.0</text>
+        <text x="300" y="82" text-anchor="middle">eth0</text>
+        <text x="400" y="82" text-anchor="middle">0</text>
+
+        <!-- Row 3 -->
+        <rect x="10" y="90" width="460" height="25" stroke-width="1"/>
+        <text x="80" y="107" text-anchor="middle">10.0.0.0/8</text>
+        <text x="190" y="107" text-anchor="middle">192.168.1.254</text>
+        <text x="300" y="107" text-anchor="middle">eth0</text>
+        <text x="400" y="107" text-anchor="middle">50</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Field</th><th>Description</th></tr>
+      <tr><td><code>Destination</code></td><td>Network address with CIDR prefix</td></tr>
+      <tr><td><code>Gateway</code></td><td>Next hop IP (0.0.0.0 = directly connected)</td></tr>
+      <tr><td><code>Interface</code></td><td>Network interface to send packets through</td></tr>
+      <tr><td><code>Metric</code></td><td>Cost/priority (lower = preferred)</td></tr>
+    </table>
+  </section>
+
+  <!-- Default Gateway -->
+  <section class="section">
+    <h2>Default Gateway <span class="spec-label">0.0.0.0/0</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- Local network box -->
+        <rect x="10" y="10" width="180" height="130" stroke-width="1" stroke-dasharray="4"/>
+        <text x="100" y="30" text-anchor="middle" class="label">Local Network 192.168.1.0/24</text>
+
+        <!-- Hosts -->
+        <rect x="25" y="50" width="65" height="30" class="filled" stroke-width="1"/>
+        <text x="57" y="70" text-anchor="middle">Host A</text>
+        <text x="57" y="92" text-anchor="middle" class="label">.10</text>
+
+        <rect x="110" y="50" width="65" height="30" class="filled" stroke-width="1"/>
+        <text x="142" y="70" text-anchor="middle">Host B</text>
+        <text x="142" y="92" text-anchor="middle" class="label">.20</text>
+
+        <!-- Default Gateway -->
+        <rect x="50" y="105" width="90" height="30" rx="8" class="filled" stroke-width="1"/>
+        <text x="95" y="125" text-anchor="middle">Gateway</text>
+        <text x="95" y="150" text-anchor="middle" class="label">.1</text>
+
+        <!-- Connection to gateway -->
+        <line x1="57" y1="80" x2="57" y2="100" stroke-width="1"/>
+        <line x1="57" y1="100" x2="95" y2="105" stroke-width="1"/>
+        <line x1="142" y1="80" x2="142" y2="100" stroke-width="1"/>
+        <line x1="142" y1="100" x2="95" y2="105" stroke-width="1"/>
+
+        <!-- Arrow to internet -->
+        <line x1="190" y1="120" x2="240" y2="120" stroke-width="1"/>
+        <polygon points="235,116 245,120 235,124" fill="currentColor"/>
+
+        <!-- Internet cloud -->
+        <ellipse cx="320" cy="120" rx="70" ry="30" class="filled" stroke-width="1"/>
+        <text x="320" y="125" text-anchor="middle">Internet</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">Packet to 8.8.8.8:
+  1. Check routing table
+  2. No specific match found
+  3. Use default route 0.0.0.0/0
+  4. Forward to gateway 192.168.1.1</pre>
+  </section>
+
+  <!-- CIDR and Subnet Masks -->
+  <section class="section">
+    <h2>CIDR Notation <span class="spec-label">RFC 4632</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 420 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- IP Address bits -->
+        <text x="10" y="20" class="label">192.168.1.0/24</text>
+
+        <rect x="10" y="30" width="240" height="25" class="filled" stroke-width="1"/>
+        <text x="130" y="47" text-anchor="middle">Network Portion (24 bits)</text>
+
+        <rect x="250" y="30" width="80" height="25" stroke-width="1"/>
+        <text x="290" y="47" text-anchor="middle">Host (8 bits)</text>
+
+        <!-- Binary representation -->
+        <text x="10" y="75">11000000.10101000.00000001.</text>
+        <text x="248" y="75">xxxxxxxx</text>
+
+        <!-- Labels -->
+        <text x="10" y="95" class="label">Network: Fixed</text>
+        <text x="250" y="95" class="label">Host: Variable</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>CIDR</th><th>Subnet Mask</th><th>Addresses</th><th>Usable</th></tr>
+      <tr><td><code>/8</code></td><td>255.0.0.0</td><td>16,777,216</td><td>16,777,214</td></tr>
+      <tr><td><code>/16</code></td><td>255.255.0.0</td><td>65,536</td><td>65,534</td></tr>
+      <tr><td><code>/24</code></td><td>255.255.255.0</td><td>256</td><td>254</td></tr>
+      <tr><td><code>/32</code></td><td>255.255.255.255</td><td>1</td><td>1</td></tr>
+    </table>
+  </section>
+
+  <!-- Private IP Ranges -->
+  <section class="section">
+    <h2>Private IP Ranges <span class="spec-label">RFC 1918</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 420 130" xmlns="http://www.w3.org/2000/svg">
+        <!-- Class A -->
+        <rect x="10" y="10" width="400" height="30" class="filled" stroke-width="1"/>
+        <text x="70" y="30" text-anchor="middle">10.0.0.0/8</text>
+        <text x="250" y="30" text-anchor="middle" class="label">10.0.0.0 - 10.255.255.255</text>
+        <text x="390" y="30" text-anchor="middle" class="label">Class A</text>
+
+        <!-- Class B -->
+        <rect x="10" y="50" width="400" height="30" class="filled" stroke-width="1"/>
+        <text x="70" y="70" text-anchor="middle">172.16.0.0/12</text>
+        <text x="250" y="70" text-anchor="middle" class="label">172.16.0.0 - 172.31.255.255</text>
+        <text x="390" y="70" text-anchor="middle" class="label">Class B</text>
+
+        <!-- Class C -->
+        <rect x="10" y="90" width="400" height="30" class="filled" stroke-width="1"/>
+        <text x="70" y="110" text-anchor="middle">192.168.0.0/16</text>
+        <text x="250" y="110" text-anchor="middle" class="label">192.168.0.0 - 192.168.255.255</text>
+        <text x="390" y="110" text-anchor="middle" class="label">Class C</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Range</th><th>Networks</th><th>Total Addresses</th><th>Common Use</th></tr>
+      <tr><td><code>10.0.0.0/8</code></td><td>1</td><td>16,777,216</td><td>Large enterprises</td></tr>
+      <tr><td><code>172.16.0.0/12</code></td><td>16</td><td>1,048,576</td><td>Medium networks</td></tr>
+      <tr><td><code>192.168.0.0/16</code></td><td>256</td><td>65,536</td><td>Home/small office</td></tr>
+    </table>
+  </section>
+
+  <!-- NAT -->
+  <section class="section">
+    <h2>Network Address Translation <span class="spec-label">RFC 3022</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- Private side -->
+        <rect x="10" y="30" width="120" height="60" stroke-width="1" stroke-dasharray="4"/>
+        <text x="70" y="50" text-anchor="middle" class="label">Private</text>
+        <text x="70" y="70" text-anchor="middle">192.168.1.10</text>
+        <text x="70" y="85" text-anchor="middle" class="label">:54321</text>
+
+        <!-- Arrow -->
+        <line x1="130" y1="60" x2="170" y2="60" stroke-width="1"/>
+        <polygon points="165,56 175,60 165,64" fill="currentColor"/>
+
+        <!-- NAT Router -->
+        <rect x="175" y="25" width="100" height="70" rx="8" class="filled" stroke-width="1"/>
+        <text x="225" y="50" text-anchor="middle">NAT</text>
+        <text x="225" y="68" text-anchor="middle" class="label">Translation</text>
+        <text x="225" y="82" text-anchor="middle" class="label">Table</text>
+
+        <!-- Arrow -->
+        <line x1="275" y1="60" x2="315" y2="60" stroke-width="1"/>
+        <polygon points="310,56 320,60 310,64" fill="currentColor"/>
+
+        <!-- Public side -->
+        <rect x="320" y="30" width="120" height="60" stroke-width="1" stroke-dasharray="4"/>
+        <text x="380" y="50" text-anchor="middle" class="label">Public</text>
+        <text x="380" y="70" text-anchor="middle">203.0.113.5</text>
+        <text x="380" y="85" text-anchor="middle" class="label">:12345</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Direction</th><th>Private Address</th><th>Public Address</th></tr>
+      <tr><td>Outbound</td><td><code>192.168.1.10:54321</code></td><td><code>203.0.113.5:12345</code></td></tr>
+      <tr><td>Inbound</td><td><code>192.168.1.10:54321</code></td><td><code>203.0.113.5:12345</code></td></tr>
+    </table>
+  </section>
+
+  <!-- BGP Basics -->
+  <section class="section">
+    <h2>BGP Basics <span class="spec-label">RFC 4271</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 150" xmlns="http://www.w3.org/2000/svg">
+        <!-- AS 64501 -->
+        <ellipse cx="80" cy="75" rx="65" ry="50" class="filled" stroke-width="1"/>
+        <text x="80" y="65" text-anchor="middle">AS 64501</text>
+        <text x="80" y="85" text-anchor="middle" class="label">ISP Alpha</text>
+
+        <!-- AS 64502 -->
+        <ellipse cx="240" cy="75" rx="65" ry="50" class="filled" stroke-width="1"/>
+        <text x="240" y="65" text-anchor="middle">AS 64502</text>
+        <text x="240" y="85" text-anchor="middle" class="label">Transit</text>
+
+        <!-- AS 64503 -->
+        <ellipse cx="400" cy="75" rx="65" ry="50" class="filled" stroke-width="1"/>
+        <text x="400" y="65" text-anchor="middle">AS 64503</text>
+        <text x="400" y="85" text-anchor="middle" class="label">ISP Beta</text>
+
+        <!-- eBGP connections -->
+        <line x1="145" y1="75" x2="175" y2="75" stroke-width="2"/>
+        <line x1="305" y1="75" x2="335" y2="75" stroke-width="2"/>
+
+        <!-- Labels -->
+        <text x="160" y="65" text-anchor="middle" class="label">eBGP</text>
+        <text x="320" y="65" text-anchor="middle" class="label">eBGP</text>
+
+        <!-- Path annotation -->
+        <text x="240" y="140" text-anchor="middle">AS Path: 64501 64502 64503</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Attribute</th><th>Description</th><th>Selection</th></tr>
+      <tr><td><code>AS Path</code></td><td>List of AS numbers traversed</td><td>Shorter = preferred</td></tr>
+      <tr><td><code>Local Pref</code></td><td>Preference within AS</td><td>Higher = preferred</td></tr>
+      <tr><td><code>MED</code></td><td>Multi-Exit Discriminator</td><td>Lower = preferred</td></tr>
+      <tr><td><code>Origin</code></td><td>IGP, EGP, or Incomplete</td><td>IGP > EGP > Incomplete</td></tr>
+    </table>
+
+    <pre class="bytes">BGP Path Selection (simplified):
+  1. Highest Local Preference
+  2. Shortest AS Path
+  3. Lowest Origin type
+  4. Lowest MED
+  5. eBGP over iBGP
+  6. Lowest router ID</pre>
+  </section>
+</WwwLayout>

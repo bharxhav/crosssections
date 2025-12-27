@@ -1,0 +1,192 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="Ethernet" subtitle="IEEE 802.3 — the data link layer frame format" slug="ethernet">
+  <!-- Frame Structure -->
+  <section class="section">
+    <h2>Frame Structure <span class="spec-label">IEEE 802.3</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 660 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="25" y="40" text-anchor="middle">7B</text>
+        <text x="25" y="62" text-anchor="middle" class="label">preamble</text>
+
+        <rect x="55" y="20" width="30" height="30" class="filled" stroke-width="1"/>
+        <text x="70" y="40" text-anchor="middle">1B</text>
+        <text x="70" y="62" text-anchor="middle" class="label">sfd</text>
+
+        <rect x="90" y="20" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="130" y="40" text-anchor="middle">6 bytes</text>
+        <text x="130" y="62" text-anchor="middle" class="label">dest mac</text>
+
+        <rect x="175" y="20" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="215" y="40" text-anchor="middle">6 bytes</text>
+        <text x="215" y="62" text-anchor="middle" class="label">src mac</text>
+
+        <rect x="260" y="20" width="55" height="30" class="filled" stroke-width="1"/>
+        <text x="287" y="40" text-anchor="middle">2B</text>
+        <text x="287" y="62" text-anchor="middle" class="label">ethertype</text>
+
+        <rect x="320" y="20" width="260" height="30" class="filled" stroke-width="1"/>
+        <text x="450" y="40" text-anchor="middle">46-1500 bytes</text>
+        <text x="450" y="62" text-anchor="middle" class="label">payload</text>
+
+        <rect x="585" y="20" width="70" height="30" class="filled" stroke-width="1"/>
+        <text x="620" y="40" text-anchor="middle">4 bytes</text>
+        <text x="620" y="62" text-anchor="middle" class="label">fcs</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Field</th><th>Size</th><th>Description</th></tr>
+      <tr><td><code>Preamble</code></td><td>7 bytes</td><td>Alternating 1/0 pattern (10101010...)</td></tr>
+      <tr><td><code>SFD</code></td><td>1 byte</td><td>Start Frame Delimiter (10101011)</td></tr>
+      <tr><td><code>Dest MAC</code></td><td>6 bytes</td><td>Destination hardware address</td></tr>
+      <tr><td><code>Src MAC</code></td><td>6 bytes</td><td>Source hardware address</td></tr>
+      <tr><td><code>EtherType</code></td><td>2 bytes</td><td>Protocol identifier</td></tr>
+      <tr><td><code>Payload</code></td><td>46-1500 bytes</td><td>Upper layer data</td></tr>
+      <tr><td><code>FCS</code></td><td>4 bytes</td><td>Frame Check Sequence (CRC-32)</td></tr>
+    </table>
+  </section>
+
+  <!-- EtherType Values -->
+  <section class="section">
+    <h2>EtherType Values <span class="spec-label">IANA assigned</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>EtherType</th><th>Protocol</th><th>Description</th></tr>
+      <tr><td><code>0x0800</code></td><td>IPv4</td><td>Internet Protocol version 4</td></tr>
+      <tr><td><code>0x0806</code></td><td>ARP</td><td>Address Resolution Protocol</td></tr>
+      <tr><td><code>0x86DD</code></td><td>IPv6</td><td>Internet Protocol version 6</td></tr>
+      <tr><td><code>0x8100</code></td><td>802.1Q</td><td>VLAN-tagged frame</td></tr>
+      <tr><td><code>0x88CC</code></td><td>LLDP</td><td>Link Layer Discovery Protocol</td></tr>
+    </table>
+  </section>
+
+  <!-- MAC Address Format -->
+  <section class="section">
+    <h2>MAC Address Format <span class="spec-label">EUI-48</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 420 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="25" y="40" text-anchor="middle">AA</text>
+        <text x="25" y="62" text-anchor="middle" class="label">oui</text>
+
+        <text x="55" y="40" fill="currentColor">:</text>
+
+        <rect x="65" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="90" y="40" text-anchor="middle">BB</text>
+        <text x="90" y="62" text-anchor="middle" class="label">oui</text>
+
+        <text x="120" y="40" fill="currentColor">:</text>
+
+        <rect x="130" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="155" y="40" text-anchor="middle">CC</text>
+        <text x="155" y="62" text-anchor="middle" class="label">oui</text>
+
+        <text x="185" y="40" fill="currentColor">:</text>
+
+        <rect x="195" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="220" y="40" text-anchor="middle">DD</text>
+        <text x="220" y="62" text-anchor="middle" class="label">nic</text>
+
+        <text x="250" y="40" fill="currentColor">:</text>
+
+        <rect x="260" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="285" y="40" text-anchor="middle">EE</text>
+        <text x="285" y="62" text-anchor="middle" class="label">nic</text>
+
+        <text x="315" y="40" fill="currentColor">:</text>
+
+        <rect x="325" y="20" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="350" y="40" text-anchor="middle">FF</text>
+        <text x="350" y="62" text-anchor="middle" class="label">nic</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">AA:BB:CC:DD:EE:FF
+└──┬──┘ └──┬──┘
+  OUI     NIC
+(vendor) (device)</pre>
+
+    <table class="defaults-table">
+      <tr><th>Component</th><th>Size</th><th>Description</th></tr>
+      <tr><td><code>OUI</code></td><td>3 bytes</td><td>Organizationally Unique Identifier (vendor)</td></tr>
+      <tr><td><code>NIC</code></td><td>3 bytes</td><td>Network Interface Controller (device specific)</td></tr>
+    </table>
+  </section>
+
+  <!-- Special MAC Addresses -->
+  <section class="section">
+    <h2>Special MAC Addresses <span class="spec-label">reserved</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Address</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>FF:FF:FF:FF:FF:FF</code></td><td>Broadcast</td><td>All hosts on local network</td></tr>
+      <tr><td><code>01:00:5E:xx:xx:xx</code></td><td>IPv4 Multicast</td><td>Mapped from multicast IP</td></tr>
+      <tr><td><code>33:33:xx:xx:xx:xx</code></td><td>IPv6 Multicast</td><td>Mapped from multicast IPv6</td></tr>
+      <tr><td><code>00:00:00:00:00:00</code></td><td>Null</td><td>Invalid / unassigned address</td></tr>
+    </table>
+
+    <div class="diagram">
+      <svg viewBox="0 0 300 50" xmlns="http://www.w3.org/2000/svg">
+        <text x="0" y="12" class="label">bit 0 of first byte:</text>
+        <rect x="0" y="20" width="140" height="25" class="filled" stroke-width="1"/>
+        <text x="70" y="37" text-anchor="middle">0 = Unicast</text>
+        <rect x="150" y="20" width="140" height="25" class="filled" stroke-width="1"/>
+        <text x="220" y="37" text-anchor="middle">1 = Multicast</text>
+      </svg>
+    </div>
+  </section>
+
+  <!-- Frame Size Limits -->
+  <section class="section">
+    <h2>Frame Size Limits <span class="spec-label">IEEE 802.3</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 500 90" xmlns="http://www.w3.org/2000/svg">
+        <!-- Min frame -->
+        <rect x="0" y="20" width="64" height="30" class="filled" stroke-width="1"/>
+        <text x="32" y="40" text-anchor="middle">64</text>
+        <text x="32" y="62" text-anchor="middle" class="label">min bytes</text>
+
+        <!-- Scale line -->
+        <line x1="80" y1="35" x2="400" y2="35" stroke-width="1" stroke-dasharray="4"/>
+
+        <!-- MTU marker -->
+        <rect x="200" y="20" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="240" y="40" text-anchor="middle">1500</text>
+        <text x="240" y="62" text-anchor="middle" class="label">mtu (payload)</text>
+
+        <!-- Max frame -->
+        <rect x="410" y="20" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="450" y="40" text-anchor="middle">1518</text>
+        <text x="450" y="62" text-anchor="middle" class="label">max bytes</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Limit</th><th>Value</th><th>Description</th></tr>
+      <tr><td><code>Minimum Frame</code></td><td>64 bytes</td><td>Ensures collision detection works</td></tr>
+      <tr><td><code>Maximum Frame</code></td><td>1518 bytes</td><td>Standard max (excl. preamble, SFD)</td></tr>
+      <tr><td><code>MTU</code></td><td>1500 bytes</td><td>Maximum Transmission Unit (payload)</td></tr>
+      <tr><td><code>Jumbo Frame</code></td><td>9000 bytes</td><td>Extended MTU (non-standard)</td></tr>
+    </table>
+  </section>
+
+  <!-- MTU Defaults -->
+  <section class="section">
+    <h2>MTU Defaults <span class="spec-label">common values</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Network Type</th><th>MTU</th><th>Notes</th></tr>
+      <tr><td><code>Ethernet</code></td><td>1500 bytes</td><td>Standard default</td></tr>
+      <tr><td><code>PPPoE</code></td><td>1492 bytes</td><td>8-byte PPPoE header overhead</td></tr>
+      <tr><td><code>VPN/Tunnel</code></td><td>1400-1460 bytes</td><td>Varies by encapsulation</td></tr>
+      <tr><td><code>Loopback</code></td><td>65535 bytes</td><td>Local interface</td></tr>
+    </table>
+  </section>
+</WwwLayout>

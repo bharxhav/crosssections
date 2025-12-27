@@ -1,0 +1,292 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="Filesystem" subtitle="How files are stored on disk — inodes, blocks, and permissions" slug="filesystem">
+  <!-- Inode Structure -->
+  <section class="section">
+    <h2>Inode Structure <span class="spec-label">POSIX</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Inode box -->
+        <rect x="10" y="10" width="150" height="180" class="filled" stroke-width="1"/>
+        <text x="85" y="30" text-anchor="middle" class="label">inode</text>
+
+        <line x1="20" y1="40" x2="150" y2="40" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="55" font-size="9">mode</text>
+        <text x="130" y="55" text-anchor="end" font-size="9">0644</text>
+
+        <line x1="20" y1="65" x2="150" y2="65" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="80" font-size="9">uid</text>
+        <text x="130" y="80" text-anchor="end" font-size="9">1000</text>
+
+        <line x1="20" y1="90" x2="150" y2="90" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="105" font-size="9">gid</text>
+        <text x="130" y="105" text-anchor="end" font-size="9">1000</text>
+
+        <line x1="20" y1="115" x2="150" y2="115" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="130" font-size="9">size</text>
+        <text x="130" y="130" text-anchor="end" font-size="9">4096</text>
+
+        <line x1="20" y1="140" x2="150" y2="140" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="155" font-size="9">mtime</text>
+
+        <line x1="20" y1="165" x2="150" y2="165" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="180" font-size="9">block ptrs</text>
+
+        <!-- Arrow to blocks -->
+        <line x1="160" y1="175" x2="200" y2="175" stroke-width="1"/>
+        <path d="M195 170 L205 175 L195 180" stroke-width="1"/>
+
+        <!-- Data blocks -->
+        <rect x="210" y="20" width="80" height="40" class="filled" stroke-width="1"/>
+        <text x="250" y="45" text-anchor="middle">Block 0</text>
+
+        <rect x="210" y="70" width="80" height="40" class="filled" stroke-width="1"/>
+        <text x="250" y="95" text-anchor="middle">Block 1</text>
+
+        <rect x="210" y="120" width="80" height="40" class="filled" stroke-width="1"/>
+        <text x="250" y="145" text-anchor="middle">Block 2</text>
+
+        <text x="250" y="175" text-anchor="middle" opacity="0.5">...</text>
+
+        <!-- Labels -->
+        <text x="320" y="45" class="label">4KB each</text>
+        <text x="320" y="95" class="label">(typical)</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Field</th><th>Size</th><th>Description</th></tr>
+      <tr><td><code>mode</code></td><td>2 bytes</td><td>File type + permissions</td></tr>
+      <tr><td><code>uid</code></td><td>4 bytes</td><td>Owner user ID</td></tr>
+      <tr><td><code>gid</code></td><td>4 bytes</td><td>Owner group ID</td></tr>
+      <tr><td><code>size</code></td><td>8 bytes</td><td>File size in bytes</td></tr>
+      <tr><td><code>atime</code></td><td>8 bytes</td><td>Last access time</td></tr>
+      <tr><td><code>mtime</code></td><td>8 bytes</td><td>Last modification time</td></tr>
+      <tr><td><code>ctime</code></td><td>8 bytes</td><td>Last status change time</td></tr>
+      <tr><td><code>nlinks</code></td><td>2 bytes</td><td>Hard link count</td></tr>
+    </table>
+  </section>
+
+  <!-- File Permissions -->
+  <section class="section">
+    <h2>File Permissions <span class="spec-label">chmod</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Permission bits -->
+        <rect x="10" y="15" width="30" height="30" class="filled" stroke-width="1"/>
+        <text x="25" y="35" text-anchor="middle">-</text>
+        <text x="25" y="60" text-anchor="middle" class="label">type</text>
+
+        <rect x="50" y="15" width="90" height="30" class="filled" stroke-width="1"/>
+        <text x="95" y="35" text-anchor="middle">rwx</text>
+        <text x="95" y="60" text-anchor="middle" class="label">owner</text>
+
+        <rect x="150" y="15" width="90" height="30" class="filled" stroke-width="1"/>
+        <text x="195" y="35" text-anchor="middle">r-x</text>
+        <text x="195" y="60" text-anchor="middle" class="label">group</text>
+
+        <rect x="250" y="15" width="90" height="30" class="filled" stroke-width="1"/>
+        <text x="295" y="35" text-anchor="middle">r-x</text>
+        <text x="295" y="60" text-anchor="middle" class="label">others</text>
+
+        <text x="370" y="35" opacity="0.5">=755</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">-rwxr-xr-x  1 user group  4096 Dec 27 12:00 script.sh
+drwxr-xr-x  2 user group  4096 Dec 27 12:00 directory/
+-rw-r--r--  1 user group  1024 Dec 27 12:00 document.txt</pre>
+
+    <table class="defaults-table">
+      <tr><th>Octal</th><th>Binary</th><th>Permissions</th><th>Common Use</th></tr>
+      <tr><td><code>755</code></td><td>111 101 101</td><td>rwxr-xr-x</td><td>Executables, directories</td></tr>
+      <tr><td><code>644</code></td><td>110 100 100</td><td>rw-r--r--</td><td>Regular files</td></tr>
+      <tr><td><code>600</code></td><td>110 000 000</td><td>rw-------</td><td>Private files (SSH keys)</td></tr>
+      <tr><td><code>777</code></td><td>111 111 111</td><td>rwxrwxrwx</td><td>Full access (avoid)</td></tr>
+      <tr><td><code>700</code></td><td>111 000 000</td><td>rwx------</td><td>Private directories</td></tr>
+    </table>
+
+    <table class="defaults-table">
+      <tr><th>Bit</th><th>Value</th><th>Meaning</th></tr>
+      <tr><td><code>r</code></td><td>4</td><td>Read</td></tr>
+      <tr><td><code>w</code></td><td>2</td><td>Write</td></tr>
+      <tr><td><code>x</code></td><td>1</td><td>Execute (files) / Search (directories)</td></tr>
+    </table>
+  </section>
+
+  <!-- Directory Entry -->
+  <section class="section">
+    <h2>Directory Entry <span class="spec-label">dirent</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 450 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- Directory table -->
+        <rect x="10" y="10" width="200" height="140" class="filled" stroke-width="1"/>
+        <text x="110" y="30" text-anchor="middle" class="label">directory entries</text>
+
+        <line x1="20" y1="45" x2="200" y2="45" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="60" font-size="9">.</text>
+        <text x="140" y="60" text-anchor="end" font-size="9">inode 42</text>
+
+        <line x1="20" y1="70" x2="200" y2="70" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="85" font-size="9">..</text>
+        <text x="140" y="85" text-anchor="end" font-size="9">inode 2</text>
+
+        <line x1="20" y1="95" x2="200" y2="95" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="110" font-size="9">file.txt</text>
+        <text x="140" y="110" text-anchor="end" font-size="9">inode 128</text>
+
+        <line x1="20" y1="120" x2="200" y2="120" stroke-width="1" opacity="0.3"/>
+        <text x="25" y="135" font-size="9">images/</text>
+        <text x="140" y="135" text-anchor="end" font-size="9">inode 256</text>
+
+        <!-- Arrow -->
+        <line x1="210" y1="105" x2="260" y2="105" stroke-width="1"/>
+        <path d="M255 100 L265 105 L255 110" stroke-width="1"/>
+
+        <!-- Inode reference -->
+        <rect x="270" y="80" width="120" height="50" class="filled" stroke-width="1"/>
+        <text x="330" y="100" text-anchor="middle" class="label">inode 128</text>
+        <text x="330" y="118" text-anchor="middle" font-size="9">metadata + blocks</text>
+
+        <!-- Labels -->
+        <text x="170" y="60" class="label">filename</text>
+        <text x="170" y="75" class="label">to inode</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Entry</th><th>Description</th></tr>
+      <tr><td><code>.</code></td><td>Current directory (self-reference)</td></tr>
+      <tr><td><code>..</code></td><td>Parent directory</td></tr>
+      <tr><td><code>filename</code></td><td>Maps name to inode number</td></tr>
+    </table>
+
+    <table class="defaults-table">
+      <tr><th>Filesystem</th><th>Max Filename</th><th>Max Path</th></tr>
+      <tr><td>ext4</td><td>255 bytes</td><td>4096 bytes</td></tr>
+      <tr><td>APFS</td><td>255 UTF-8 chars</td><td>1024 chars</td></tr>
+      <tr><td>NTFS</td><td>255 UTF-16 chars</td><td>32767 chars</td></tr>
+    </table>
+  </section>
+
+  <!-- Filesystem Defaults -->
+  <section class="section">
+    <h2>Filesystem Defaults <span class="spec-label">ext4, APFS, NTFS</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Property</th><th>ext4</th><th>APFS</th><th>NTFS</th></tr>
+      <tr><td>Block size</td><td>4 KB</td><td>4 KB</td><td>4 KB</td></tr>
+      <tr><td>Max file size</td><td>16 TB</td><td>8 EB</td><td>16 EB</td></tr>
+      <tr><td>Max volume size</td><td>1 EB</td><td>16 EB</td><td>16 EB</td></tr>
+      <tr><td>Inode size</td><td>256 bytes</td><td>variable</td><td>1 KB (MFT)</td></tr>
+      <tr><td>Journaling</td><td>Yes</td><td>Yes (COW)</td><td>Yes</td></tr>
+      <tr><td>Case-sensitive</td><td>Yes</td><td>Optional</td><td>No*</td></tr>
+    </table>
+
+    <table class="defaults-table">
+      <tr><th>Block Size</th><th>Description</th></tr>
+      <tr><td><code>512 B</code></td><td>Traditional sector size</td></tr>
+      <tr><td><code>4 KB</code></td><td>Typical filesystem block (modern default)</td></tr>
+      <tr><td><code>4 KB</code></td><td>Memory page size (most architectures)</td></tr>
+    </table>
+  </section>
+
+  <!-- File Descriptors -->
+  <section class="section">
+    <h2>File Descriptors <span class="spec-label">POSIX</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- Process -->
+        <rect x="10" y="10" width="120" height="120" class="filled" stroke-width="1"/>
+        <text x="70" y="30" text-anchor="middle" class="label">process</text>
+
+        <!-- FD table -->
+        <rect x="20" y="45" width="100" height="75" stroke-width="1"/>
+        <text x="70" y="60" text-anchor="middle" class="label">fd table</text>
+
+        <text x="30" y="80" font-size="9">0</text>
+        <text x="50" y="80" font-size="9">stdin</text>
+
+        <text x="30" y="95" font-size="9">1</text>
+        <text x="50" y="95" font-size="9">stdout</text>
+
+        <text x="30" y="110" font-size="9">2</text>
+        <text x="50" y="110" font-size="9">stderr</text>
+
+        <!-- Arrows -->
+        <line x1="130" y1="75" x2="180" y2="50" stroke-width="1"/>
+        <path d="M175 45 L185 50 L175 55" stroke-width="1"/>
+
+        <line x1="130" y1="90" x2="180" y2="90" stroke-width="1"/>
+        <path d="M175 85 L185 90 L175 95" stroke-width="1"/>
+
+        <line x1="130" y1="105" x2="180" y2="130" stroke-width="1"/>
+        <path d="M175 125 L185 130 L175 135" stroke-width="1"/>
+
+        <!-- Destinations -->
+        <rect x="190" y="30" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="240" y="50" text-anchor="middle" font-size="9">keyboard</text>
+
+        <rect x="190" y="75" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="240" y="95" text-anchor="middle" font-size="9">terminal</text>
+
+        <rect x="190" y="115" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="240" y="135" text-anchor="middle" font-size="9">terminal</text>
+
+        <!-- Labels -->
+        <text x="320" y="50" class="label">input</text>
+        <text x="320" y="95" class="label">output</text>
+        <text x="320" y="135" class="label">errors</text>
+      </svg>
+    </div>
+
+    <pre class="bytes"># Redirect stdout to file
+command > output.txt
+
+# Redirect stderr to file
+command 2> errors.txt
+
+# Redirect both
+command > output.txt 2>&1
+
+# Pipe stdout to next command
+command1 | command2</pre>
+
+    <table class="defaults-table">
+      <tr><th>FD</th><th>Name</th><th>Default</th><th>C Constant</th></tr>
+      <tr><td><code>0</code></td><td>stdin</td><td>Keyboard input</td><td><code>STDIN_FILENO</code></td></tr>
+      <tr><td><code>1</code></td><td>stdout</td><td>Terminal output</td><td><code>STDOUT_FILENO</code></td></tr>
+      <tr><td><code>2</code></td><td>stderr</td><td>Terminal (errors)</td><td><code>STDERR_FILENO</code></td></tr>
+      <tr><td><code>3+</code></td><td>(user)</td><td>Opened files/sockets</td><td>-</td></tr>
+    </table>
+
+    <table class="defaults-table">
+      <tr><th>Limit</th><th>Default</th><th>Description</th></tr>
+      <tr><td>Soft limit</td><td>1024</td><td>Per-process open files (ulimit -n)</td></tr>
+      <tr><td>Hard limit</td><td>4096+</td><td>Kernel maximum per process</td></tr>
+      <tr><td>System-wide</td><td>varies</td><td>/proc/sys/fs/file-max</td></tr>
+    </table>
+  </section>
+
+  <!-- File Types -->
+  <section class="section">
+    <h2>File Types <span class="spec-label">stat</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Symbol</th><th>Type</th><th>Description</th></tr>
+      <tr><td><code>-</code></td><td>Regular file</td><td>Data storage</td></tr>
+      <tr><td><code>d</code></td><td>Directory</td><td>Contains entries</td></tr>
+      <tr><td><code>l</code></td><td>Symbolic link</td><td>Points to path</td></tr>
+      <tr><td><code>c</code></td><td>Character device</td><td>/dev/tty, /dev/null</td></tr>
+      <tr><td><code>b</code></td><td>Block device</td><td>/dev/sda, /dev/nvme0n1</td></tr>
+      <tr><td><code>p</code></td><td>Named pipe (FIFO)</td><td>IPC mechanism</td></tr>
+      <tr><td><code>s</code></td><td>Socket</td><td>Unix domain socket</td></tr>
+    </table>
+  </section>
+</WwwLayout>

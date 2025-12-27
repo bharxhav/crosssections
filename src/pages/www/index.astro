@@ -1,0 +1,192 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const base = import.meta.env.BASE_URL.endsWith('/') ? import.meta.env.BASE_URL : `${import.meta.env.BASE_URL}/`;
+---
+
+<BaseLayout title="www/ — crosssections" stylesheets={["/styles/www.css"]}>
+  <style>
+    .lifecycle {
+      display: flex;
+      justify-content: center;
+      margin: 2rem 0;
+    }
+    .lifecycle svg {
+      max-width: 100%;
+      height: auto;
+    }
+    .lifecycle text {
+      font-family: var(--mono);
+      font-size: 11px;
+      fill: currentColor;
+      dominant-baseline: middle;
+    }
+    .lifecycle .cluster-label {
+      font-size: 9px;
+      opacity: 0.5;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+    }
+    .lifecycle .flow-label {
+      font-size: 9px;
+      opacity: 0.3;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+    }
+    .lifecycle .cluster-box {
+      stroke: currentColor;
+      stroke-width: 1;
+      stroke-dasharray: 4;
+      fill: none;
+      opacity: 0.3;
+    }
+    .lifecycle .node {
+      stroke: currentColor;
+      stroke-width: 1;
+      fill: currentColor;
+      fill-opacity: 0.08;
+      transition: fill-opacity 0.15s;
+    }
+    .lifecycle a:hover .node {
+      fill-opacity: 0.2;
+    }
+    .lifecycle .connector {
+      stroke: currentColor;
+      stroke-width: 1;
+      stroke-dasharray: 4;
+      opacity: 0.4;
+    }
+    .lifecycle .flow-path {
+      stroke: currentColor;
+      stroke-width: 1;
+      stroke-dasharray: 4;
+      fill: none;
+      opacity: 0.3;
+    }
+  </style>
+
+  <nav class="www-nav">
+    <a href={base} class="prev">home</a>
+    <span class="current"><a href={base}>crosssections</a> &gt; www</span>
+    <span></span>
+  </nav>
+
+  <main class="page">
+    <header class="page-header">
+      <h1>www/</h1>
+      <p>packet lifecycle</p>
+    </header>
+
+    <section class="section lifecycle">
+      <svg viewBox="0 0 400 680" xmlns="http://www.w3.org/2000/svg">
+        <!-- Browser cluster -->
+        <g class="cluster">
+          <rect x="100" y="20" width="200" height="100" rx="8" class="cluster-box"/>
+          <text x="200" y="12" text-anchor="middle" class="cluster-label">BROWSER</text>
+
+          <a href={`${base}www/rendering`}>
+            <rect x="110" y="30" width="85" height="35" rx="4" class="node"/>
+            <text x="152" y="52" text-anchor="middle">rendering</text>
+          </a>
+          <a href={`${base}www/parsing`}>
+            <rect x="205" y="30" width="85" height="35" rx="4" class="node"/>
+            <text x="247" y="52" text-anchor="middle">parsing</text>
+          </a>
+          <a href={`${base}www/html-css`}>
+            <rect x="110" y="75" width="85" height="35" rx="4" class="node"/>
+            <text x="152" y="97" text-anchor="middle">html-css</text>
+          </a>
+          <a href={`${base}www/html-syntax`}>
+            <rect x="205" y="75" width="85" height="35" rx="4" class="node"/>
+            <text x="247" y="97" text-anchor="middle">html-syntax</text>
+          </a>
+        </g>
+
+        <!-- Flow labels -->
+        <text x="60" y="300" class="flow-label" transform="rotate(-90, 60, 300)">RESPONSE</text>
+        <text x="340" y="300" class="flow-label" transform="rotate(90, 340, 300)">REQUEST</text>
+
+        <!-- Connection from browser -->
+        <line x1="200" y1="120" x2="200" y2="150" class="connector"/>
+
+        <!-- HTTP -->
+        <a href={`${base}www/http`}>
+          <rect x="140" y="150" width="120" height="40" rx="4" class="node"/>
+          <text x="200" y="175" text-anchor="middle">http</text>
+        </a>
+        <line x1="200" y1="190" x2="200" y2="220" class="connector"/>
+
+        <!-- TLS -->
+        <a href={`${base}www/tls`}>
+          <rect x="140" y="220" width="120" height="40" rx="4" class="node"/>
+          <text x="200" y="245" text-anchor="middle">tls</text>
+        </a>
+        <line x1="200" y1="260" x2="200" y2="290" class="connector"/>
+
+        <!-- TCP / Reassembly split -->
+        <g class="transport-cluster">
+          <line x1="200" y1="290" x2="130" y2="310" class="connector"/>
+          <line x1="200" y1="290" x2="270" y2="310" class="connector"/>
+
+          <a href={`${base}www/tcp`}>
+            <rect x="80" y="310" width="100" height="40" rx="4" class="node"/>
+            <text x="130" y="335" text-anchor="middle">tcp</text>
+          </a>
+          <a href={`${base}www/reassembly`}>
+            <rect x="220" y="310" width="100" height="40" rx="4" class="node"/>
+            <text x="270" y="335" text-anchor="middle">reassembly</text>
+          </a>
+
+          <line x1="130" y1="350" x2="200" y2="380" class="connector"/>
+          <line x1="270" y1="350" x2="200" y2="380" class="connector"/>
+        </g>
+
+        <!-- IP -->
+        <a href={`${base}www/ip`}>
+          <rect x="140" y="380" width="120" height="40" rx="4" class="node"/>
+          <text x="200" y="405" text-anchor="middle">ip</text>
+        </a>
+        <line x1="200" y1="420" x2="200" y2="450" class="connector"/>
+
+        <!-- Routing -->
+        <a href={`${base}www/routing`}>
+          <rect x="140" y="450" width="120" height="40" rx="4" class="node"/>
+          <text x="200" y="475" text-anchor="middle">routing</text>
+        </a>
+        <line x1="200" y1="490" x2="200" y2="520" class="connector"/>
+
+        <!-- Ethernet -->
+        <a href={`${base}www/ethernet`}>
+          <rect x="140" y="520" width="120" height="40" rx="4" class="node"/>
+          <text x="200" y="545" text-anchor="middle">ethernet</text>
+        </a>
+        <line x1="200" y1="560" x2="200" y2="590" class="connector"/>
+
+        <!-- Server cluster -->
+        <g class="cluster">
+          <rect x="100" y="590" width="200" height="60" rx="8" class="cluster-box"/>
+          <text x="200" y="668" text-anchor="middle" class="cluster-label">SERVER</text>
+
+          <a href={`${base}www/filesystem`}>
+            <rect x="130" y="605" width="140" height="35" rx="4" class="node"/>
+            <text x="200" y="627" text-anchor="middle">filesystem</text>
+          </a>
+        </g>
+
+        <!-- Circular arrows on sides -->
+        <path d="M 80 150 Q 50 300, 80 450" class="flow-path" marker-end="url(#arrowUp)"/>
+        <path d="M 320 150 Q 350 300, 320 450" class="flow-path" marker-end="url(#arrowDown)"/>
+
+        <!-- Arrow markers -->
+        <defs>
+          <marker id="arrowDown" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M 0 0 L 6 3 L 0 6 Z" fill="currentColor" opacity="0.4"/>
+          </marker>
+          <marker id="arrowUp" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
+            <path d="M 6 0 L 0 3 L 6 6 Z" fill="currentColor" opacity="0.4"/>
+          </marker>
+        </defs>
+      </svg>
+    </section>
+  </main>
+</BaseLayout>

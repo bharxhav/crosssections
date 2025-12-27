@@ -1,0 +1,429 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="Parsing" subtitle="Browser parsing — from bytes to render tree" slug="parsing">
+  <!-- HTML Parsing Pipeline -->
+  <section class="section">
+    <h2>HTML Parsing Pipeline <span class="spec-label">WHATWG HTML</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 660 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- HTML Text -->
+        <rect x="0" y="25" width="90" height="30" class="filled" stroke-width="1"/>
+        <text x="45" y="45" text-anchor="middle">HTML bytes</text>
+        <text x="45" y="68" text-anchor="middle" class="label">network</text>
+
+        <!-- Arrow -->
+        <line x1="95" y1="40" x2="125" y2="40" stroke-width="1"/>
+        <path d="M 120 35 L 130 40 L 120 45" stroke-width="1"/>
+
+        <!-- Tokenizer -->
+        <rect x="135" y="25" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="185" y="45" text-anchor="middle">Tokenizer</text>
+        <text x="185" y="68" text-anchor="middle" class="label">state machine</text>
+
+        <!-- Arrow -->
+        <line x1="240" y1="40" x2="270" y2="40" stroke-width="1"/>
+        <path d="M 265 35 L 275 40 L 265 45" stroke-width="1"/>
+
+        <!-- Tokens -->
+        <rect x="280" y="25" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="320" y="45" text-anchor="middle">Tokens</text>
+        <text x="320" y="68" text-anchor="middle" class="label">tag, text, etc</text>
+
+        <!-- Arrow -->
+        <line x1="365" y1="40" x2="395" y2="40" stroke-width="1"/>
+        <path d="M 390 35 L 400 40 L 390 45" stroke-width="1"/>
+
+        <!-- Tree Builder -->
+        <rect x="405" y="25" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="455" y="45" text-anchor="middle">Tree Builder</text>
+        <text x="455" y="68" text-anchor="middle" class="label">insertion mode</text>
+
+        <!-- Arrow -->
+        <line x1="510" y1="40" x2="540" y2="40" stroke-width="1"/>
+        <path d="M 535 35 L 545 40 L 535 45" stroke-width="1"/>
+
+        <!-- DOM -->
+        <rect x="550" y="25" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="600" y="45" text-anchor="middle">DOM Tree</text>
+        <text x="600" y="68" text-anchor="middle" class="label">document</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Token Type</th><th>Description</th><th>Example</th></tr>
+      <tr><td><code>DOCTYPE</code></td><td>Document type declaration</td><td><code>&lt;!DOCTYPE html&gt;</code></td></tr>
+      <tr><td><code>StartTag</code></td><td>Opening element tag</td><td><code>&lt;div class="x"&gt;</code></td></tr>
+      <tr><td><code>EndTag</code></td><td>Closing element tag</td><td><code>&lt;/div&gt;</code></td></tr>
+      <tr><td><code>Character</code></td><td>Text content</td><td><code>Hello World</code></td></tr>
+      <tr><td><code>Comment</code></td><td>HTML comment</td><td><code>&lt;!-- note --&gt;</code></td></tr>
+      <tr><td><code>EOF</code></td><td>End of file</td><td>(implicit)</td></tr>
+    </table>
+  </section>
+
+  <!-- DOM Tree Construction -->
+  <section class="section">
+    <h2>DOM Tree Construction <span class="spec-label">Document Object Model</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Document node -->
+        <rect x="160" y="10" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="200" y="27" text-anchor="middle">Document</text>
+
+        <!-- Line to html -->
+        <line x1="200" y1="35" x2="200" y2="55" stroke-width="1"/>
+
+        <!-- html node -->
+        <rect x="160" y="55" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="200" y="72" text-anchor="middle">&lt;html&gt;</text>
+
+        <!-- Lines to head and body -->
+        <line x1="200" y1="80" x2="200" y2="95" stroke-width="1"/>
+        <line x1="200" y1="95" x2="100" y2="95" stroke-width="1"/>
+        <line x1="200" y1="95" x2="300" y2="95" stroke-width="1"/>
+        <line x1="100" y1="95" x2="100" y2="105" stroke-width="1"/>
+        <line x1="300" y1="95" x2="300" y2="105" stroke-width="1"/>
+
+        <!-- head node -->
+        <rect x="60" y="105" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="100" y="122" text-anchor="middle">&lt;head&gt;</text>
+
+        <!-- body node -->
+        <rect x="260" y="105" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="300" y="122" text-anchor="middle">&lt;body&gt;</text>
+
+        <!-- Lines from head -->
+        <line x1="100" y1="130" x2="100" y2="155" stroke-width="1"/>
+
+        <!-- title node -->
+        <rect x="60" y="155" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="100" y="172" text-anchor="middle">&lt;title&gt;</text>
+
+        <!-- Lines from body -->
+        <line x1="300" y1="130" x2="300" y2="140" stroke-width="1"/>
+        <line x1="300" y1="140" x2="250" y2="140" stroke-width="1"/>
+        <line x1="300" y1="140" x2="350" y2="140" stroke-width="1"/>
+        <line x1="250" y1="140" x2="250" y2="155" stroke-width="1"/>
+        <line x1="350" y1="140" x2="350" y2="155" stroke-width="1"/>
+
+        <!-- div node -->
+        <rect x="210" y="155" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="250" y="172" text-anchor="middle">&lt;div&gt;</text>
+
+        <!-- p node -->
+        <rect x="310" y="155" width="80" height="25" class="filled" stroke-width="1"/>
+        <text x="350" y="172" text-anchor="middle">&lt;p&gt;</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Node Type</th><th>Interface</th><th>nodeType</th></tr>
+      <tr><td>Element</td><td><code>Element</code></td><td>1</td></tr>
+      <tr><td>Attribute</td><td><code>Attr</code></td><td>2</td></tr>
+      <tr><td>Text</td><td><code>Text</code></td><td>3</td></tr>
+      <tr><td>Comment</td><td><code>Comment</code></td><td>8</td></tr>
+      <tr><td>Document</td><td><code>Document</code></td><td>9</td></tr>
+      <tr><td>DocumentType</td><td><code>DocumentType</code></td><td>10</td></tr>
+    </table>
+  </section>
+
+  <!-- CSS Parsing -->
+  <section class="section">
+    <h2>CSS Parsing <span class="spec-label">CSSOM</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 660 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- CSS Text -->
+        <rect x="0" y="25" width="90" height="30" class="filled" stroke-width="1"/>
+        <text x="45" y="45" text-anchor="middle">CSS bytes</text>
+        <text x="45" y="68" text-anchor="middle" class="label">stylesheet</text>
+
+        <!-- Arrow -->
+        <line x1="95" y1="40" x2="125" y2="40" stroke-width="1"/>
+        <path d="M 120 35 L 130 40 L 120 45" stroke-width="1"/>
+
+        <!-- Tokenizer -->
+        <rect x="135" y="25" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="185" y="45" text-anchor="middle">Tokenizer</text>
+        <text x="185" y="68" text-anchor="middle" class="label">lexical</text>
+
+        <!-- Arrow -->
+        <line x1="240" y1="40" x2="270" y2="40" stroke-width="1"/>
+        <path d="M 265 35 L 275 40 L 265 45" stroke-width="1"/>
+
+        <!-- Parser -->
+        <rect x="280" y="25" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="320" y="45" text-anchor="middle">Parser</text>
+        <text x="320" y="68" text-anchor="middle" class="label">syntax</text>
+
+        <!-- Arrow -->
+        <line x1="365" y1="40" x2="395" y2="40" stroke-width="1"/>
+        <path d="M 390 35 L 400 40 L 390 45" stroke-width="1"/>
+
+        <!-- Style Rules -->
+        <rect x="405" y="25" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="455" y="45" text-anchor="middle">Style Rules</text>
+        <text x="455" y="68" text-anchor="middle" class="label">selector + decl</text>
+
+        <!-- Arrow -->
+        <line x1="510" y1="40" x2="540" y2="40" stroke-width="1"/>
+        <path d="M 535 35 L 545 40 L 535 45" stroke-width="1"/>
+
+        <!-- CSSOM -->
+        <rect x="550" y="25" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="600" y="45" text-anchor="middle">CSSOM</text>
+        <text x="600" y="68" text-anchor="middle" class="label">stylesheets</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>CSS Token</th><th>Description</th><th>Example</th></tr>
+      <tr><td><code>ident</code></td><td>Identifier</td><td><code>margin</code></td></tr>
+      <tr><td><code>hash</code></td><td>ID selector</td><td><code>#header</code></td></tr>
+      <tr><td><code>dimension</code></td><td>Number with unit</td><td><code>16px</code></td></tr>
+      <tr><td><code>string</code></td><td>Quoted string</td><td><code>"Arial"</code></td></tr>
+      <tr><td><code>function</code></td><td>Function call</td><td><code>rgb(</code></td></tr>
+      <tr><td><code>delim</code></td><td>Delimiter</td><td><code>.</code> <code>*</code></td></tr>
+    </table>
+  </section>
+
+  <!-- JavaScript Execution -->
+  <section class="section">
+    <h2>JavaScript Execution <span class="spec-label">script element</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 500 160" xmlns="http://www.w3.org/2000/svg">
+        <!-- Timeline base -->
+        <line x1="30" y1="30" x2="470" y2="30" stroke-width="1"/>
+        <text x="15" y="34" text-anchor="end" class="label">normal</text>
+
+        <!-- HTML parsing bar -->
+        <rect x="30" y="20" width="120" height="20" class="filled" stroke-width="1"/>
+        <text x="90" y="34" text-anchor="middle">HTML parse</text>
+
+        <!-- Script blocking -->
+        <rect x="150" y="20" width="60" height="20" stroke-width="1" stroke-dasharray="3"/>
+        <text x="180" y="34" text-anchor="middle">JS</text>
+
+        <!-- Continue -->
+        <rect x="210" y="20" width="120" height="20" class="filled" stroke-width="1"/>
+        <text x="270" y="34" text-anchor="middle">HTML parse</text>
+
+        <!-- async timeline -->
+        <line x1="30" y1="70" x2="470" y2="70" stroke-width="1"/>
+        <text x="15" y="74" text-anchor="end" class="label">async</text>
+
+        <rect x="30" y="60" width="200" height="20" class="filled" stroke-width="1"/>
+        <text x="130" y="74" text-anchor="middle">HTML parse</text>
+
+        <!-- Async fetch (parallel) -->
+        <rect x="80" y="85" width="80" height="15" stroke-width="1" stroke-dasharray="3"/>
+        <text x="120" y="96" text-anchor="middle" class="label">fetch</text>
+
+        <!-- Async execute -->
+        <rect x="160" y="60" width="50" height="20" stroke-width="1" stroke-dasharray="3"/>
+        <text x="185" y="74" text-anchor="middle">JS</text>
+
+        <!-- Continue async -->
+        <rect x="210" y="60" width="120" height="20" class="filled" stroke-width="1"/>
+        <text x="270" y="74" text-anchor="middle">HTML parse</text>
+
+        <!-- defer timeline -->
+        <line x1="30" y1="130" x2="470" y2="130" stroke-width="1"/>
+        <text x="15" y="134" text-anchor="end" class="label">defer</text>
+
+        <rect x="30" y="120" width="300" height="20" class="filled" stroke-width="1"/>
+        <text x="180" y="134" text-anchor="middle">HTML parse (unblocked)</text>
+
+        <!-- Defer fetch (parallel) -->
+        <rect x="80" y="145" width="80" height="15" stroke-width="1" stroke-dasharray="3"/>
+        <text x="120" y="156" text-anchor="middle" class="label">fetch</text>
+
+        <!-- Defer execute after parse -->
+        <rect x="330" y="120" width="60" height="20" stroke-width="1" stroke-dasharray="3"/>
+        <text x="360" y="134" text-anchor="middle">JS</text>
+
+        <!-- DOMContentLoaded marker -->
+        <line x1="400" y1="115" x2="400" y2="150" stroke-width="1" stroke-dasharray="2"/>
+        <text x="400" y="108" text-anchor="middle" class="label">DOMContentLoaded</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Attribute</th><th>Fetch</th><th>Execute</th><th>Order</th></tr>
+      <tr><td>(none)</td><td>Blocking</td><td>Immediately</td><td>Document order</td></tr>
+      <tr><td><code>async</code></td><td>Parallel</td><td>When ready</td><td>Fetch completion</td></tr>
+      <tr><td><code>defer</code></td><td>Parallel</td><td>After parse</td><td>Document order</td></tr>
+      <tr><td><code>type="module"</code></td><td>Parallel</td><td>After parse</td><td>Dependency order</td></tr>
+    </table>
+  </section>
+
+  <!-- Render Tree -->
+  <section class="section">
+    <h2>Render Tree <span class="spec-label">DOM + CSSOM</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 440 140" xmlns="http://www.w3.org/2000/svg">
+        <!-- DOM -->
+        <rect x="20" y="20" width="100" height="40" class="filled" stroke-width="1"/>
+        <text x="70" y="45" text-anchor="middle">DOM</text>
+
+        <!-- CSSOM -->
+        <rect x="20" y="80" width="100" height="40" class="filled" stroke-width="1"/>
+        <text x="70" y="105" text-anchor="middle">CSSOM</text>
+
+        <!-- Arrows converging -->
+        <line x1="125" y1="40" x2="170" y2="70" stroke-width="1"/>
+        <line x1="125" y1="100" x2="170" y2="70" stroke-width="1"/>
+        <path d="M 165 65 L 175 70 L 165 75" stroke-width="1"/>
+
+        <!-- Render Tree -->
+        <rect x="180" y="50" width="100" height="40" class="filled" stroke-width="1"/>
+        <text x="230" y="75" text-anchor="middle">Render Tree</text>
+
+        <!-- Arrow -->
+        <line x1="285" y1="70" x2="315" y2="70" stroke-width="1"/>
+        <path d="M 310 65 L 320 70 L 310 75" stroke-width="1"/>
+
+        <!-- Layout -->
+        <rect x="320" y="50" width="100" height="40" class="filled" stroke-width="1"/>
+        <text x="370" y="75" text-anchor="middle">Layout</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Element</th><th>In Render Tree?</th><th>Reason</th></tr>
+      <tr><td><code>&lt;html&gt;</code></td><td>Yes</td><td>Root element</td></tr>
+      <tr><td><code>&lt;head&gt;</code></td><td>No</td><td>display: none</td></tr>
+      <tr><td><code>&lt;script&gt;</code></td><td>No</td><td>display: none</td></tr>
+      <tr><td><code>&lt;div hidden&gt;</code></td><td>No</td><td>hidden attribute</td></tr>
+      <tr><td><code>display: none</code></td><td>No</td><td>CSS display value</td></tr>
+      <tr><td><code>visibility: hidden</code></td><td>Yes</td><td>Still occupies space</td></tr>
+    </table>
+  </section>
+
+  <!-- Critical Rendering Path -->
+  <section class="section">
+    <h2>Critical Rendering Path <span class="spec-label">performance</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 600 100" xmlns="http://www.w3.org/2000/svg">
+        <!-- HTML -->
+        <rect x="0" y="35" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="40" y="55" text-anchor="middle">HTML</text>
+
+        <!-- Arrow -->
+        <line x1="85" y1="50" x2="115" y2="50" stroke-width="1"/>
+        <path d="M 110 45 L 120 50 L 110 55" stroke-width="1"/>
+
+        <!-- DOM -->
+        <rect x="120" y="35" width="70" height="30" class="filled" stroke-width="1"/>
+        <text x="155" y="55" text-anchor="middle">DOM</text>
+
+        <!-- CSS -->
+        <rect x="120" y="5" width="70" height="20" stroke-width="1" stroke-dasharray="3"/>
+        <text x="155" y="19" text-anchor="middle">CSS</text>
+
+        <!-- Arrow from CSS -->
+        <line x1="190" y1="15" x2="220" y2="15" stroke-width="1"/>
+        <line x1="220" y1="15" x2="220" y2="35" stroke-width="1"/>
+
+        <!-- Arrow from DOM -->
+        <line x1="195" y1="50" x2="245" y2="50" stroke-width="1"/>
+
+        <!-- CSSOM -->
+        <rect x="195" y="35" width="70" height="30" class="filled" stroke-width="1"/>
+        <text x="230" y="55" text-anchor="middle">CSSOM</text>
+
+        <!-- Arrow to Render Tree -->
+        <line x1="270" y1="50" x2="300" y2="50" stroke-width="1"/>
+        <path d="M 295 45 L 305 50 L 295 55" stroke-width="1"/>
+
+        <!-- Render Tree -->
+        <rect x="305" y="35" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="345" y="55" text-anchor="middle">Render</text>
+
+        <!-- Arrow -->
+        <line x1="390" y1="50" x2="420" y2="50" stroke-width="1"/>
+        <path d="M 415 45 L 425 50 L 415 55" stroke-width="1"/>
+
+        <!-- Layout -->
+        <rect x="425" y="35" width="70" height="30" class="filled" stroke-width="1"/>
+        <text x="460" y="55" text-anchor="middle">Layout</text>
+
+        <!-- Arrow -->
+        <line x1="500" y1="50" x2="530" y2="50" stroke-width="1"/>
+        <path d="M 525 45 L 535 50 L 525 55" stroke-width="1"/>
+
+        <!-- Paint -->
+        <rect x="535" y="35" width="60" height="30" class="filled" stroke-width="1"/>
+        <text x="565" y="55" text-anchor="middle">Paint</text>
+
+        <!-- Render-blocking note -->
+        <text x="155" y="90" text-anchor="middle" class="label">render-blocking</text>
+        <line x1="120" y1="65" x2="120" y2="85" stroke-width="1" stroke-dasharray="2"/>
+        <line x1="190" y1="65" x2="190" y2="85" stroke-width="1" stroke-dasharray="2"/>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Resource</th><th>Blocking Type</th><th>Optimization</th></tr>
+      <tr><td>CSS <code>&lt;link&gt;</code></td><td>Render-blocking</td><td>Inline critical CSS</td></tr>
+      <tr><td>JS <code>&lt;script&gt;</code></td><td>Parser-blocking</td><td>defer or async</td></tr>
+      <tr><td>Fonts</td><td>Render-blocking</td><td>font-display: swap</td></tr>
+      <tr><td>Images</td><td>Non-blocking</td><td>loading="lazy"</td></tr>
+    </table>
+  </section>
+
+  <!-- Document Events -->
+  <section class="section">
+    <h2>Document Events <span class="spec-label">DOMContentLoaded vs load</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 550 80" xmlns="http://www.w3.org/2000/svg">
+        <!-- Timeline -->
+        <line x1="30" y1="40" x2="520" y2="40" stroke-width="1"/>
+
+        <!-- Navigation -->
+        <line x1="30" y1="30" x2="30" y2="50" stroke-width="2"/>
+        <text x="30" y="65" text-anchor="middle" class="label">navigate</text>
+
+        <!-- HTML parsing phase -->
+        <rect x="40" y="30" width="150" height="20" class="filled" stroke-width="1"/>
+        <text x="115" y="44" text-anchor="middle">HTML parsing</text>
+
+        <!-- DOMContentLoaded -->
+        <line x1="200" y1="25" x2="200" y2="55" stroke-width="2"/>
+        <text x="200" y="70" text-anchor="middle" class="label">DOMContentLoaded</text>
+
+        <!-- Subresources loading -->
+        <rect x="210" y="30" width="180" height="20" class="filled" stroke-width="1"/>
+        <text x="300" y="44" text-anchor="middle">images, iframes, etc</text>
+
+        <!-- Load -->
+        <line x1="400" y1="25" x2="400" y2="55" stroke-width="2"/>
+        <text x="400" y="70" text-anchor="middle" class="label">load</text>
+
+        <!-- After load -->
+        <rect x="410" y="30" width="100" height="20" stroke-width="1" stroke-dasharray="3"/>
+        <text x="460" y="44" text-anchor="middle">idle</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Event</th><th>Fires When</th><th>Use Case</th></tr>
+      <tr><td><code>DOMContentLoaded</code></td><td>HTML parsed, defer scripts done</td><td>DOM manipulation</td></tr>
+      <tr><td><code>load</code></td><td>All resources loaded</td><td>Image dimensions, full page</td></tr>
+      <tr><td><code>beforeunload</code></td><td>User navigating away</td><td>Unsaved changes warning</td></tr>
+      <tr><td><code>unload</code></td><td>Page being unloaded</td><td>Cleanup (deprecated)</td></tr>
+    </table>
+
+    <pre class="bytes">document.readyState
+├── "loading"      → document still loading
+├── "interactive"  → DOM ready (DOMContentLoaded)
+└── "complete"     → all resources loaded (load)</pre>
+  </section>
+</WwwLayout>

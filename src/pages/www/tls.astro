@@ -1,0 +1,221 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="TLS" subtitle="Transport Layer Security — encrypted communication" slug="tls">
+  <!-- TLS Record Structure -->
+  <section class="section">
+    <h2>Record Structure <span class="spec-label">RFC 8446</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="40" y="35" text-anchor="middle">0x16</text>
+        <text x="40" y="55" text-anchor="middle" class="label">content type</text>
+
+        <rect x="90" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="130" y="35" text-anchor="middle">0x0303</text>
+        <text x="130" y="55" text-anchor="middle" class="label">version</text>
+
+        <rect x="180" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="220" y="35" text-anchor="middle">length</text>
+        <text x="220" y="55" text-anchor="middle" class="label">2 bytes</text>
+
+        <rect x="270" y="15" width="200" height="30" class="filled" stroke-width="1"/>
+        <text x="370" y="35" text-anchor="middle">fragment (encrypted payload)</text>
+        <text x="370" y="55" text-anchor="middle" class="label">0..16384 bytes</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Content Type</th><th>Value</th><th>Description</th></tr>
+      <tr><td><code>change_cipher_spec</code></td><td><code>0x14</code></td><td>Legacy, rarely used in TLS 1.3</td></tr>
+      <tr><td><code>alert</code></td><td><code>0x15</code></td><td>Error or warning messages</td></tr>
+      <tr><td><code>handshake</code></td><td><code>0x16</code></td><td>Key exchange, authentication</td></tr>
+      <tr><td><code>application_data</code></td><td><code>0x17</code></td><td>Encrypted application payload</td></tr>
+    </table>
+  </section>
+
+  <!-- Handshake Flow -->
+  <section class="section">
+    <h2>Handshake Flow <span class="spec-label">TLS 1.3</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 460 320" xmlns="http://www.w3.org/2000/svg">
+        <!-- Client/Server labels -->
+        <text x="60" y="20" text-anchor="middle">Client</text>
+        <text x="400" y="20" text-anchor="middle">Server</text>
+
+        <!-- Vertical lines -->
+        <line x1="60" y1="30" x2="60" y2="300" stroke-width="1"/>
+        <line x1="400" y1="30" x2="400" y2="300" stroke-width="1"/>
+
+        <!-- ClientHello -->
+        <line x1="60" y1="60" x2="400" y2="80" stroke-width="1"/>
+        <polygon points="395,78 400,80 395,82" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="230" y="55" text-anchor="middle">ClientHello</text>
+        <text x="230" y="68" text-anchor="middle" class="label">random, cipher suites, extensions</text>
+
+        <!-- ServerHello -->
+        <line x1="400" y1="100" x2="60" y2="120" stroke-width="1"/>
+        <polygon points="65,118 60,120 65,122" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="230" y="95" text-anchor="middle">ServerHello</text>
+        <text x="230" y="108" text-anchor="middle" class="label">random, selected cipher, extensions</text>
+
+        <!-- Certificate -->
+        <line x1="400" y1="145" x2="60" y2="165" stroke-width="1"/>
+        <polygon points="65,163 60,165 65,167" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="230" y="140" text-anchor="middle">Certificate</text>
+        <text x="230" y="153" text-anchor="middle" class="label">server certificate chain</text>
+
+        <!-- CertificateVerify -->
+        <line x1="400" y1="185" x2="60" y2="205" stroke-width="1"/>
+        <polygon points="65,203 60,205 65,207" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="230" y="180" text-anchor="middle">CertificateVerify</text>
+        <text x="230" y="193" text-anchor="middle" class="label">signature over handshake</text>
+
+        <!-- Server Finished -->
+        <line x1="400" y1="225" x2="60" y2="245" stroke-width="1"/>
+        <polygon points="65,243 60,245 65,247" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="230" y="220" text-anchor="middle">Finished</text>
+        <text x="230" y="233" text-anchor="middle" class="label">server handshake MAC</text>
+
+        <!-- Client Finished -->
+        <line x1="60" y1="265" x2="400" y2="285" stroke-width="1"/>
+        <polygon points="395,283 400,285 395,287" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="230" y="260" text-anchor="middle">Finished</text>
+        <text x="230" y="273" text-anchor="middle" class="label">client handshake MAC</text>
+
+        <!-- Encrypted indicator -->
+        <rect x="10" y="130" width="8" height="160" class="filled" style="opacity: 0.2;"/>
+        <text x="14" y="210" class="label" transform="rotate(-90 14 210)">encrypted</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">{`ClientHello: TLS 1.3, cipher suites, key_share, supported_versions
+ServerHello: selected cipher, key_share
+{Certificate}: server cert chain (encrypted)
+{Finished}: verify_data (encrypted)
+Application Data: encrypted with derived keys`}</pre>
+  </section>
+
+  <!-- Cipher Suite Structure -->
+  <section class="section">
+    <h2>Cipher Suite Structure <span class="spec-label">TLS 1.3</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 500 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="15" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="25" y="35" text-anchor="middle">TLS</text>
+        <text x="25" y="55" text-anchor="middle" class="label">protocol</text>
+
+        <text x="55" y="35" fill="currentColor">_</text>
+
+        <rect x="65" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="105" y="35" text-anchor="middle">AES_128</text>
+        <text x="105" y="55" text-anchor="middle" class="label">cipher</text>
+
+        <text x="150" y="35" fill="currentColor">_</text>
+
+        <rect x="160" y="15" width="60" height="30" class="filled" stroke-width="1"/>
+        <text x="190" y="35" text-anchor="middle">GCM</text>
+        <text x="190" y="55" text-anchor="middle" class="label">mode</text>
+
+        <text x="225" y="35" fill="currentColor">_</text>
+
+        <rect x="235" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="275" y="35" text-anchor="middle">SHA256</text>
+        <text x="275" y="55" text-anchor="middle" class="label">hash/prf</text>
+
+        <text x="340" y="35" fill="currentColor" opacity="0.5">=</text>
+
+        <rect x="360" y="15" width="130" height="30" class="filled" stroke-width="1"/>
+        <text x="425" y="35" text-anchor="middle">0x1301</text>
+        <text x="425" y="55" text-anchor="middle" class="label">identifier</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Cipher Suite (TLS 1.3)</th><th>ID</th><th>Key Exchange</th></tr>
+      <tr><td><code>TLS_AES_128_GCM_SHA256</code></td><td><code>0x1301</code></td><td>ECDHE / DHE</td></tr>
+      <tr><td><code>TLS_AES_256_GCM_SHA384</code></td><td><code>0x1302</code></td><td>ECDHE / DHE</td></tr>
+      <tr><td><code>TLS_CHACHA20_POLY1305_SHA256</code></td><td><code>0x1303</code></td><td>ECDHE / DHE</td></tr>
+    </table>
+  </section>
+
+  <!-- Certificate Chain -->
+  <section class="section">
+    <h2>Certificate Chain <span class="spec-label">X.509</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+        <!-- Root CA -->
+        <rect x="120" y="10" width="160" height="40" class="filled" stroke-width="1"/>
+        <text x="200" y="35" text-anchor="middle">Root CA</text>
+        <text x="200" y="5" text-anchor="middle" class="label">self-signed, trusted</text>
+
+        <!-- Arrow down -->
+        <line x1="200" y1="50" x2="200" y2="70" stroke-width="1"/>
+        <polygon points="197,65 200,70 203,65" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="215" y="65" class="label">signs</text>
+
+        <!-- Intermediate CA -->
+        <rect x="120" y="75" width="160" height="40" class="filled" stroke-width="1"/>
+        <text x="200" y="100" text-anchor="middle">Intermediate CA</text>
+        <text x="330" y="95" class="label">optional, can be multiple</text>
+
+        <!-- Arrow down -->
+        <line x1="200" y1="115" x2="200" y2="135" stroke-width="1"/>
+        <polygon points="197,130 200,135 203,130" class="filled" style="fill: currentColor; opacity: 1;"/>
+        <text x="215" y="130" class="label">signs</text>
+
+        <!-- End-entity -->
+        <rect x="120" y="140" width="160" height="40" class="filled" stroke-width="1"/>
+        <text x="200" y="165" text-anchor="middle">Server Certificate</text>
+        <text x="200" y="190" text-anchor="middle" class="label">end-entity, contains public key</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">Subject: CN=example.com
+Issuer: CN=Let's Encrypt Authority X3
+Validity: Not Before: Dec 01 2025, Not After: Feb 28 2026
+Public Key: RSA 2048 bit / EC P-256
+Extensions: subjectAltName=DNS:example.com, DNS:www.example.com</pre>
+  </section>
+
+  <!-- TLS Versions -->
+  <section class="section">
+    <h2>TLS Versions <span class="spec-label">supported_versions</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Version</th><th>Wire Value</th><th>Status</th><th>Notes</th></tr>
+      <tr><td><code>TLS 1.0</code></td><td><code>0x0301</code></td><td>Deprecated</td><td>RFC 8996 prohibits use</td></tr>
+      <tr><td><code>TLS 1.1</code></td><td><code>0x0302</code></td><td>Deprecated</td><td>RFC 8996 prohibits use</td></tr>
+      <tr><td><code>TLS 1.2</code></td><td><code>0x0303</code></td><td>Supported</td><td>Still widely used</td></tr>
+      <tr><td><code>TLS 1.3</code></td><td><code>0x0304</code></td><td>Current</td><td>Default for modern clients</td></tr>
+    </table>
+
+    <table class="defaults-table">
+      <tr><th>Property</th><th>TLS 1.2</th><th>TLS 1.3</th></tr>
+      <tr><td>Round trips</td><td>2 RTT</td><td>1 RTT (0-RTT optional)</td></tr>
+      <tr><td>Key exchange</td><td>RSA, DHE, ECDHE</td><td>ECDHE, DHE only</td></tr>
+      <tr><td>Handshake encryption</td><td>None</td><td>After ServerHello</td></tr>
+      <tr><td>Static RSA</td><td>Allowed</td><td>Removed</td></tr>
+    </table>
+  </section>
+
+  <!-- Default Ports -->
+  <section class="section">
+    <h2>Default Ports <span class="spec-label">IANA</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Protocol</th><th>Port</th><th>Description</th></tr>
+      <tr><td><code>HTTPS</code></td><td><code>443</code></td><td>HTTP over TLS</td></tr>
+      <tr><td><code>SMTPS</code></td><td><code>465</code></td><td>SMTP over TLS (implicit)</td></tr>
+      <tr><td><code>IMAPS</code></td><td><code>993</code></td><td>IMAP over TLS</td></tr>
+      <tr><td><code>POP3S</code></td><td><code>995</code></td><td>POP3 over TLS</td></tr>
+      <tr><td><code>LDAPS</code></td><td><code>636</code></td><td>LDAP over TLS</td></tr>
+      <tr><td><code>FTPS</code></td><td><code>990</code></td><td>FTP over TLS (implicit)</td></tr>
+    </table>
+  </section>
+</WwwLayout>

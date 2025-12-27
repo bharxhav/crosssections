@@ -1,0 +1,193 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="HTTP" subtitle="Hypertext Transfer Protocol — the application layer" slug="http">
+  <!-- Request Line -->
+  <section class="section">
+    <h2>Request Line <span class="spec-label">RFC 9110</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="15" width="70" height="30" class="filled" stroke-width="1"/>
+        <text x="35" y="35" text-anchor="middle">GET</text>
+        <text x="35" y="55" text-anchor="middle" class="label">method</text>
+
+        <rect x="80" y="15" width="180" height="30" class="filled" stroke-width="1"/>
+        <text x="170" y="35" text-anchor="middle">/index.html</text>
+        <text x="170" y="55" text-anchor="middle" class="label">request-target</text>
+
+        <rect x="270" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="310" y="35" text-anchor="middle">HTTP/1.1</text>
+        <text x="310" y="55" text-anchor="middle" class="label">version</text>
+
+        <text x="360" y="35" fill="currentColor" opacity="0.4">CRLF</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">GET /index.html HTTP/1.1\r\n</pre>
+
+    <table class="defaults-table">
+      <tr><th>Method</th><th>Safe</th><th>Idempotent</th><th>Body</th></tr>
+      <tr><td><code>GET</code></td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td><code>HEAD</code></td><td>Yes</td><td>Yes</td><td>No</td></tr>
+      <tr><td><code>POST</code></td><td>No</td><td>No</td><td>Yes</td></tr>
+      <tr><td><code>PUT</code></td><td>No</td><td>Yes</td><td>Yes</td></tr>
+      <tr><td><code>DELETE</code></td><td>No</td><td>Yes</td><td>No</td></tr>
+      <tr><td><code>OPTIONS</code></td><td>Yes</td><td>Yes</td><td>Optional</td></tr>
+    </table>
+  </section>
+
+  <!-- Request Headers -->
+  <section class="section">
+    <h2>Request Headers <span class="spec-label">field-name: field-value</span></h2>
+
+    <pre class="bytes">Host: example.com\r\n
+User-Agent: Mozilla/5.0\r\n
+Accept: text/html,application/xhtml+xml\r\n
+Accept-Language: en-US,en;q=0.9\r\n
+Accept-Encoding: gzip, deflate, br\r\n
+Connection: keep-alive\r\n
+\r\n</pre>
+
+    <table class="defaults-table">
+      <tr><th>Header</th><th>Default (if omitted)</th></tr>
+      <tr><td><code>Host</code></td><td>Required in HTTP/1.1</td></tr>
+      <tr><td><code>Connection</code></td><td><code>keep-alive</code></td></tr>
+      <tr><td><code>Accept</code></td><td><code>*/*</code></td></tr>
+      <tr><td><code>Accept-Encoding</code></td><td>identity (no compression)</td></tr>
+      <tr><td><code>Cache-Control</code></td><td>heuristic caching</td></tr>
+    </table>
+  </section>
+
+  <!-- Status Line -->
+  <section class="section">
+    <h2>Status Line <span class="spec-label">RFC 9110</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 280 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="15" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="40" y="35" text-anchor="middle">HTTP/1.1</text>
+        <text x="40" y="55" text-anchor="middle" class="label">version</text>
+
+        <rect x="90" y="15" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="115" y="35" text-anchor="middle">200</text>
+        <text x="115" y="55" text-anchor="middle" class="label">status</text>
+
+        <rect x="150" y="15" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="175" y="35" text-anchor="middle">OK</text>
+        <text x="175" y="55" text-anchor="middle" class="label">reason</text>
+
+        <text x="210" y="35" fill="currentColor" opacity="0.4">CRLF</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Range</th><th>Class</th><th>Example</th></tr>
+      <tr><td><code>1xx</code></td><td>Informational</td><td>100 Continue</td></tr>
+      <tr><td><code>2xx</code></td><td>Success</td><td>200 OK, 201 Created</td></tr>
+      <tr><td><code>3xx</code></td><td>Redirection</td><td>301 Moved, 304 Not Modified</td></tr>
+      <tr><td><code>4xx</code></td><td>Client Error</td><td>400 Bad Request, 404 Not Found</td></tr>
+      <tr><td><code>5xx</code></td><td>Server Error</td><td>500 Internal, 503 Unavailable</td></tr>
+    </table>
+  </section>
+
+  <!-- Response Headers -->
+  <section class="section">
+    <h2>Response Headers <span class="spec-label">field-name: field-value</span></h2>
+
+    <pre class="bytes">Date: Fri, 27 Dec 2025 12:00:00 GMT\r\n
+Content-Type: text/html; charset=utf-8\r\n
+Content-Length: 1256\r\n
+Server: Apache/2.4\r\n
+Cache-Control: max-age=3600\r\n
+\r\n</pre>
+
+    <table class="defaults-table">
+      <tr><th>Header</th><th>Default (if omitted)</th></tr>
+      <tr><td><code>Content-Type</code></td><td><code>application/octet-stream</code></td></tr>
+      <tr><td><code>Content-Length</code></td><td>chunked or connection close</td></tr>
+      <tr><td><code>Transfer-Encoding</code></td><td>identity</td></tr>
+      <tr><td><code>Connection</code></td><td><code>keep-alive</code></td></tr>
+    </table>
+  </section>
+
+  <!-- Message Structure -->
+  <section class="section">
+    <h2>Message Structure <span class="spec-label">Content-Type, Content-Length</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 300 180" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="280" height="25" class="filled" stroke-width="1"/>
+        <text x="150" y="27" text-anchor="middle">Status Line</text>
+
+        <rect x="10" y="40" width="280" height="50" class="filled" stroke-width="1"/>
+        <text x="150" y="70" text-anchor="middle">Headers</text>
+
+        <line x1="10" y1="95" x2="290" y2="95" stroke-width="2" stroke-dasharray="4"/>
+        <text x="150" y="108" text-anchor="middle" class="label">CRLF CRLF (blank line)</text>
+
+        <rect x="10" y="115" width="280" height="55" class="filled" stroke-width="1"/>
+        <text x="150" y="147" text-anchor="middle">Body</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Extension</th><th>Content-Type</th></tr>
+      <tr><td><code>.html</code></td><td><code>text/html</code></td></tr>
+      <tr><td><code>.css</code></td><td><code>text/css</code></td></tr>
+      <tr><td><code>.js</code></td><td><code>text/javascript</code></td></tr>
+      <tr><td><code>.json</code></td><td><code>application/json</code></td></tr>
+      <tr><td><code>.png</code></td><td><code>image/png</code></td></tr>
+      <tr><td>(unknown)</td><td><code>application/octet-stream</code></td></tr>
+    </table>
+  </section>
+
+  <!-- URL Structure -->
+  <section class="section">
+    <h2>URL Structure <span class="spec-label">RFC 3986</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 70" xmlns="http://www.w3.org/2000/svg">
+        <rect x="0" y="20" width="45" height="25" class="filled" stroke-width="1"/>
+        <text x="22" y="37" text-anchor="middle">https</text>
+        <text x="22" y="58" text-anchor="middle" class="label">scheme</text>
+
+        <text x="50" y="37" fill="currentColor">://</text>
+
+        <rect x="70" y="20" width="95" height="25" class="filled" stroke-width="1"/>
+        <text x="117" y="37" text-anchor="middle">example.com</text>
+        <text x="117" y="58" text-anchor="middle" class="label">host</text>
+
+        <text x="170" y="37" fill="currentColor">:</text>
+
+        <rect x="178" y="20" width="32" height="25" class="filled" stroke-width="1"/>
+        <text x="194" y="37" text-anchor="middle">443</text>
+        <text x="194" y="58" text-anchor="middle" class="label">port</text>
+
+        <rect x="215" y="20" width="95" height="25" class="filled" stroke-width="1"/>
+        <text x="262" y="37" text-anchor="middle">/path/file</text>
+        <text x="262" y="58" text-anchor="middle" class="label">path</text>
+
+        <text x="315" y="37" fill="currentColor">?</text>
+
+        <rect x="323" y="20" width="55" height="25" class="filled" stroke-width="1"/>
+        <text x="350" y="37" text-anchor="middle">q=test</text>
+        <text x="350" y="58" text-anchor="middle" class="label">query</text>
+
+        <text x="383" y="37" fill="currentColor">#</text>
+
+        <rect x="393" y="20" width="55" height="25" class="filled" stroke-width="1"/>
+        <text x="420" y="37" text-anchor="middle">top</text>
+        <text x="420" y="58" text-anchor="middle" class="label">fragment</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Scheme</th><th>Default Port</th></tr>
+      <tr><td><code>http</code></td><td>80</td></tr>
+      <tr><td><code>https</code></td><td>443</td></tr>
+      <tr><td><code>ftp</code></td><td>21</td></tr>
+    </table>
+  </section>
+</WwwLayout>

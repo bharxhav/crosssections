@@ -1,0 +1,278 @@
+---
+import WwwLayout from "../../layouts/WwwLayout.astro";
+---
+
+<WwwLayout title="HTML Syntax" subtitle="Hypertext Markup Language — parsing and document structure" slug="html-syntax">
+  <!-- Document Structure -->
+  <section class="section">
+    <h2>Document Structure <span class="spec-label">WHATWG HTML</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 220" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="380" height="25" class="filled" stroke-width="1"/>
+        <text x="200" y="27" text-anchor="middle">&lt;!DOCTYPE html&gt;</text>
+        <text x="200" y="8" text-anchor="middle" class="label">doctype</text>
+
+        <rect x="10" y="45" width="380" height="165" stroke-width="1"/>
+        <text x="30" y="62">&lt;html&gt;</text>
+
+        <rect x="30" y="75" width="340" height="55" class="filled" stroke-width="1"/>
+        <text x="50" y="92">&lt;head&gt;</text>
+        <text x="70" y="110" opacity="0.6">&lt;meta&gt; &lt;title&gt; &lt;link&gt; &lt;style&gt;</text>
+        <text x="50" y="125">&lt;/head&gt;</text>
+        <text x="200" y="68" text-anchor="middle" class="label">metadata</text>
+
+        <rect x="30" y="140" width="340" height="55" class="filled" stroke-width="1"/>
+        <text x="50" y="157">&lt;body&gt;</text>
+        <text x="70" y="175" opacity="0.6">visible content</text>
+        <text x="50" y="190">&lt;/body&gt;</text>
+        <text x="200" y="133" text-anchor="middle" class="label">content</text>
+
+        <text x="30" y="207">&lt;/html&gt;</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Page Title&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    ...
+  &lt;/body&gt;
+&lt;/html&gt;</pre>
+  </section>
+
+  <!-- Element Anatomy -->
+  <section class="section">
+    <h2>Element Anatomy <span class="spec-label">tags + content</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 480 120" xmlns="http://www.w3.org/2000/svg">
+        <!-- Opening tag -->
+        <rect x="10" y="40" width="15" height="30" class="filled" stroke-width="1"/>
+        <text x="17" y="60" text-anchor="middle">&lt;</text>
+
+        <rect x="25" y="40" width="20" height="30" class="filled" stroke-width="1"/>
+        <text x="35" y="60" text-anchor="middle">a</text>
+        <text x="35" y="85" text-anchor="middle" class="label">tag</text>
+
+        <rect x="50" y="40" width="130" height="30" class="filled" stroke-width="1"/>
+        <text x="115" y="60" text-anchor="middle">href="/page"</text>
+        <text x="115" y="85" text-anchor="middle" class="label">attribute</text>
+
+        <rect x="185" y="40" width="15" height="30" class="filled" stroke-width="1"/>
+        <text x="192" y="60" text-anchor="middle">&gt;</text>
+
+        <text x="110" y="32" text-anchor="middle" class="label">opening tag</text>
+        <line x1="10" y1="35" x2="200" y2="35" stroke-width="1" stroke-dasharray="2"/>
+
+        <!-- Content -->
+        <rect x="210" y="40" width="90" height="30" class="filled" stroke-width="1"/>
+        <text x="255" y="60" text-anchor="middle">Click here</text>
+        <text x="255" y="85" text-anchor="middle" class="label">content</text>
+
+        <!-- Closing tag -->
+        <rect x="310" y="40" width="15" height="30" class="filled" stroke-width="1"/>
+        <text x="317" y="60" text-anchor="middle">&lt;</text>
+
+        <rect x="325" y="40" width="15" height="30" class="filled" stroke-width="1"/>
+        <text x="332" y="60" text-anchor="middle">/</text>
+
+        <rect x="340" y="40" width="20" height="30" class="filled" stroke-width="1"/>
+        <text x="350" y="60" text-anchor="middle">a</text>
+        <text x="350" y="85" text-anchor="middle" class="label">tag</text>
+
+        <rect x="360" y="40" width="15" height="30" class="filled" stroke-width="1"/>
+        <text x="367" y="60" text-anchor="middle">&gt;</text>
+
+        <text x="347" y="32" text-anchor="middle" class="label">closing tag</text>
+        <line x1="310" y1="35" x2="375" y2="35" stroke-width="1" stroke-dasharray="2"/>
+
+        <!-- Attribute breakdown -->
+        <line x1="70" y1="95" x2="70" y2="110" stroke-width="1"/>
+        <line x1="160" y1="95" x2="160" y2="110" stroke-width="1"/>
+        <text x="70" y="118" text-anchor="middle" class="label">name</text>
+        <text x="115" y="118" text-anchor="middle" class="label">=</text>
+        <text x="160" y="118" text-anchor="middle" class="label">value</text>
+      </svg>
+    </div>
+
+    <pre class="bytes">&lt;a href="/page"&gt;Click here&lt;/a&gt;</pre>
+  </section>
+
+  <!-- Void Elements -->
+  <section class="section">
+    <h2>Void Elements <span class="spec-label">no closing tag</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 60" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="15" width="60" height="30" class="filled" stroke-width="1"/>
+        <text x="40" y="35" text-anchor="middle">&lt;br&gt;</text>
+
+        <rect x="80" y="15" width="100" height="30" class="filled" stroke-width="1"/>
+        <text x="130" y="35" text-anchor="middle">&lt;img src&gt;</text>
+
+        <rect x="190" y="15" width="70" height="30" class="filled" stroke-width="1"/>
+        <text x="225" y="35" text-anchor="middle">&lt;input&gt;</text>
+
+        <rect x="270" y="15" width="60" height="30" class="filled" stroke-width="1"/>
+        <text x="300" y="35" text-anchor="middle">&lt;meta&gt;</text>
+
+        <rect x="340" y="15" width="50" height="30" class="filled" stroke-width="1"/>
+        <text x="365" y="35" text-anchor="middle">&lt;link&gt;</text>
+
+        <text x="200" y="58" text-anchor="middle" class="label">self-closing — no content allowed</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Element</th><th>Purpose</th><th>Common Attributes</th></tr>
+      <tr><td><code>&lt;br&gt;</code></td><td>Line break</td><td>none</td></tr>
+      <tr><td><code>&lt;hr&gt;</code></td><td>Thematic break</td><td>none</td></tr>
+      <tr><td><code>&lt;img&gt;</code></td><td>Image</td><td><code>src</code>, <code>alt</code></td></tr>
+      <tr><td><code>&lt;input&gt;</code></td><td>Form input</td><td><code>type</code>, <code>name</code></td></tr>
+      <tr><td><code>&lt;meta&gt;</code></td><td>Metadata</td><td><code>charset</code>, <code>name</code></td></tr>
+      <tr><td><code>&lt;link&gt;</code></td><td>External resource</td><td><code>rel</code>, <code>href</code></td></tr>
+      <tr><td><code>&lt;area&gt;</code></td><td>Image map area</td><td><code>shape</code>, <code>coords</code></td></tr>
+      <tr><td><code>&lt;base&gt;</code></td><td>Base URL</td><td><code>href</code></td></tr>
+      <tr><td><code>&lt;col&gt;</code></td><td>Table column</td><td><code>span</code></td></tr>
+      <tr><td><code>&lt;embed&gt;</code></td><td>Embedded content</td><td><code>src</code>, <code>type</code></td></tr>
+      <tr><td><code>&lt;source&gt;</code></td><td>Media source</td><td><code>src</code>, <code>type</code></td></tr>
+      <tr><td><code>&lt;track&gt;</code></td><td>Text track</td><td><code>src</code>, <code>kind</code></td></tr>
+      <tr><td><code>&lt;wbr&gt;</code></td><td>Word break opportunity</td><td>none</td></tr>
+    </table>
+  </section>
+
+  <!-- Character Entities -->
+  <section class="section">
+    <h2>Character Entities <span class="spec-label">named + numeric</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 90" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="50" y="40" text-anchor="middle">&amp;amp;</text>
+        <text x="50" y="62" text-anchor="middle">&amp;</text>
+        <text x="50" y="78" text-anchor="middle" class="label">ampersand</text>
+
+        <rect x="110" y="20" width="60" height="30" class="filled" stroke-width="1"/>
+        <text x="140" y="40" text-anchor="middle">&amp;lt;</text>
+        <text x="140" y="62" text-anchor="middle">&lt;</text>
+        <text x="140" y="78" text-anchor="middle" class="label">less-than</text>
+
+        <rect x="190" y="20" width="60" height="30" class="filled" stroke-width="1"/>
+        <text x="220" y="40" text-anchor="middle">&amp;gt;</text>
+        <text x="220" y="62" text-anchor="middle">&gt;</text>
+        <text x="220" y="78" text-anchor="middle" class="label">greater-than</text>
+
+        <rect x="270" y="20" width="80" height="30" class="filled" stroke-width="1"/>
+        <text x="310" y="40" text-anchor="middle">&amp;quot;</text>
+        <text x="310" y="62" text-anchor="middle">"</text>
+        <text x="310" y="78" text-anchor="middle" class="label">quotation</text>
+
+        <text x="200" y="12" text-anchor="middle" class="label">entity reference renders as</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Entity</th><th>Numeric</th><th>Character</th><th>When Required</th></tr>
+      <tr><td><code>&amp;amp;</code></td><td><code>&amp;#38;</code></td><td>&amp;</td><td>Always in content</td></tr>
+      <tr><td><code>&amp;lt;</code></td><td><code>&amp;#60;</code></td><td>&lt;</td><td>Always in content</td></tr>
+      <tr><td><code>&amp;gt;</code></td><td><code>&amp;#62;</code></td><td>&gt;</td><td>After <code>]]</code> in content</td></tr>
+      <tr><td><code>&amp;quot;</code></td><td><code>&amp;#34;</code></td><td>"</td><td>In quoted attributes</td></tr>
+      <tr><td><code>&amp;apos;</code></td><td><code>&amp;#39;</code></td><td>'</td><td>In single-quoted attributes</td></tr>
+      <tr><td><code>&amp;nbsp;</code></td><td><code>&amp;#160;</code></td><td>(space)</td><td>Non-breaking space</td></tr>
+    </table>
+  </section>
+
+  <!-- DOCTYPE -->
+  <section class="section">
+    <h2>DOCTYPE <span class="spec-label">rendering mode</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 420 100" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="10" width="180" height="35" class="filled" stroke-width="1"/>
+        <text x="100" y="32" text-anchor="middle">&lt;!DOCTYPE html&gt;</text>
+        <text x="100" y="55" text-anchor="middle" class="label">standards mode</text>
+
+        <line x1="200" y1="27" x2="220" y2="27" stroke-width="1"/>
+        <text x="230" y="20" class="label">present</text>
+        <text x="230" y="35" class="label">or absent</text>
+        <line x1="240" y1="27" x2="260" y2="27" stroke-width="1"/>
+
+        <rect x="270" y="10" width="140" height="35" class="filled" stroke-width="1"/>
+        <text x="340" y="32" text-anchor="middle">(missing)</text>
+        <text x="340" y="55" text-anchor="middle" class="label">quirks mode</text>
+
+        <text x="210" y="85" text-anchor="middle" opacity="0.6">quirks mode emulates legacy browser bugs</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Mode</th><th>Triggered By</th><th>Behavior</th></tr>
+      <tr><td>Standards</td><td><code>&lt;!DOCTYPE html&gt;</code></td><td>CSS box model, strict parsing</td></tr>
+      <tr><td>Almost Standards</td><td>Older DOCTYPEs with URL</td><td>Standards except table cell sizing</td></tr>
+      <tr><td>Quirks</td><td>Missing or malformed DOCTYPE</td><td>Legacy IE5 box model, loose parsing</td></tr>
+    </table>
+  </section>
+
+  <!-- Meta Charset -->
+  <section class="section">
+    <h2>Meta Charset <span class="spec-label">encoding declaration</span></h2>
+
+    <div class="diagram">
+      <svg viewBox="0 0 400 80" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="20" width="200" height="30" class="filled" stroke-width="1"/>
+        <text x="110" y="40" text-anchor="middle">&lt;meta charset="UTF-8"&gt;</text>
+        <text x="110" y="60" text-anchor="middle" class="label">explicit declaration</text>
+
+        <line x1="220" y1="35" x2="240" y2="35" stroke-width="1"/>
+
+        <rect x="250" y="20" width="140" height="30" class="filled" stroke-width="1"/>
+        <text x="320" y="40" text-anchor="middle">windows-1252</text>
+        <text x="320" y="60" text-anchor="middle" class="label">default fallback</text>
+
+        <text x="200" y="12" text-anchor="middle" class="label">must appear in first 1024 bytes</text>
+      </svg>
+    </div>
+
+    <table class="defaults-table">
+      <tr><th>Scenario</th><th>Encoding Used</th></tr>
+      <tr><td>HTTP Content-Type header specifies charset</td><td>Header value takes precedence</td></tr>
+      <tr><td>BOM (Byte Order Mark) present</td><td>UTF-8 or UTF-16 per BOM</td></tr>
+      <tr><td><code>&lt;meta charset="..."&gt;</code> present</td><td>Specified encoding</td></tr>
+      <tr><td><code>&lt;meta http-equiv="Content-Type"&gt;</code></td><td>Charset from content attribute</td></tr>
+      <tr><td>No declaration</td><td><code>windows-1252</code> (legacy default)</td></tr>
+    </table>
+
+    <pre class="bytes">&lt;!-- Recommended: first element in &lt;head&gt; --&gt;
+&lt;head&gt;
+  &lt;meta charset="UTF-8"&gt;
+  &lt;title&gt;...&lt;/title&gt;
+&lt;/head&gt;</pre>
+  </section>
+
+  <!-- Default Attributes -->
+  <section class="section">
+    <h2>Default Attributes <span class="spec-label">implicit values</span></h2>
+
+    <table class="defaults-table">
+      <tr><th>Element</th><th>Attribute</th><th>Default Value</th></tr>
+      <tr><td><code>&lt;input&gt;</code></td><td><code>type</code></td><td><code>"text"</code></td></tr>
+      <tr><td><code>&lt;button&gt;</code></td><td><code>type</code></td><td><code>"submit"</code></td></tr>
+      <tr><td><code>&lt;script&gt;</code></td><td><code>type</code></td><td><code>"text/javascript"</code></td></tr>
+      <tr><td><code>&lt;style&gt;</code></td><td><code>type</code></td><td><code>"text/css"</code></td></tr>
+      <tr><td><code>&lt;a&gt;</code></td><td><code>target</code></td><td><code>"_self"</code></td></tr>
+      <tr><td><code>&lt;form&gt;</code></td><td><code>method</code></td><td><code>"get"</code></td></tr>
+      <tr><td><code>&lt;form&gt;</code></td><td><code>enctype</code></td><td><code>"application/x-www-form-urlencoded"</code></td></tr>
+      <tr><td><code>&lt;textarea&gt;</code></td><td><code>wrap</code></td><td><code>"soft"</code></td></tr>
+      <tr><td><code>&lt;th&gt;</code></td><td><code>scope</code></td><td><code>"auto"</code></td></tr>
+      <tr><td><code>&lt;link rel="stylesheet"&gt;</code></td><td><code>type</code></td><td><code>"text/css"</code></td></tr>
+      <tr><td><code>&lt;ol&gt;</code></td><td><code>type</code></td><td><code>"1"</code></td></tr>
+      <tr><td><code>&lt;ol&gt;</code></td><td><code>start</code></td><td><code>1</code></td></tr>
+      <tr><td><code>&lt;img&gt;</code></td><td><code>decoding</code></td><td><code>"auto"</code></td></tr>
+      <tr><td><code>&lt;video&gt;</code>, <code>&lt;audio&gt;</code></td><td><code>preload</code></td><td><code>"auto"</code> (browser-dependent)</td></tr>
+    </table>
+  </section>
+</WwwLayout>
