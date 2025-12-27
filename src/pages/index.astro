@@ -1,0 +1,32 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { wwwPages } from "../config/navigation";
+---
+
+<BaseLayout title="crosssections" stylesheets={["/styles/app.css"]}>
+  <div class="container">
+    <header>
+      <h1>crosssections</h1>
+      <p>anatomies of digital standards</p>
+    </header>
+
+    <main>
+      <div class="file-tree">
+        <a href="/www/">www/</a>
+        {wwwPages.map((page, i) => {
+          const num = String(i + 1).padStart(2, '0');
+          const prefix = i === wwwPages.length - 1 ? '└──' : '├──';
+          return (
+            <div class="tree-item">
+              <span class="tree-branch">{prefix}</span> <span class="tree-num">{num}.</span> <a href={`/www/${page.slug}`}>{page.slug}</a>
+            </div>
+          );
+        })}
+      </div>
+    </main>
+
+    <footer>
+      <a href="https://github.com/bharxhav/crosssections">github</a>
+    </footer>
+  </div>
+</BaseLayout>

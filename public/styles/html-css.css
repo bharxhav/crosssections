@@ -1,0 +1,77 @@
+/* ============================================
+   HTML-CSS — Page-specific styles
+   ============================================ */
+
+/* CSS property labels (alias for this page) */
+.css-label {
+  font-family: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+  font-size: 0.7rem;
+  opacity: 0.6;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  white-space: nowrap;
+}
+
+/* States row */
+.states-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem;
+  align-items: center;
+}
+
+/* Input grid */
+.input-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 1rem;
+}
+
+.input-item {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.input-item label {
+  font-size: 0.75rem;
+  opacity: 0.7;
+}
+
+/* Display demo blocks */
+.display-demo {
+  padding: 0.5rem;
+  border: 1px dotted currentColor;
+  margin: 0.25rem 0;
+}
+
+.display-demo.inline {
+  display: inline;
+  margin: 0 0.25rem;
+}
+
+/* Color swatch grid */
+.color-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 0.5rem;
+}
+
+.color-swatch {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.color-swatch-box {
+  height: 40px;
+  border: 1px solid currentColor;
+  border-radius: 4px;
+}
+
+.color-swatch-label {
+  font-size: 0.65rem;
+  font-family: ui-monospace, monospace;
+  opacity: 0.7;
+}

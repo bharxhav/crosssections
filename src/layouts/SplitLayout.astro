@@ -1,0 +1,28 @@
+---
+import BaseLayout from "./BaseLayout.astro";
+import Header from "../components/Header.astro";
+
+interface Props {
+  title: string;
+  subtitle: string;
+  slug: string;
+}
+
+const { title, subtitle, slug } = Astro.props;
+---
+
+<BaseLayout
+  title={`${title} — crosssections`}
+  stylesheets={["/styles/www.css", "/styles/html-css.css"]}
+>
+  <Header slug={slug} section="www" />
+
+  <header class="expose-header">
+    <div class="header-light">Light Mode</div>
+    <div class="header-dark">Dark Mode</div>
+  </header>
+
+  <main class="expose">
+    <slot />
+  </main>
+</BaseLayout>

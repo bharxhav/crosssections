@@ -1,0 +1,337 @@
+/* ============================================
+   WWW — Shared Styles
+   ============================================ */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+:root {
+  --bg: #ffffff;
+  --fg: #1a1a1a;
+  --muted: #666;
+  --border: #ccc;
+  --mono: ui-monospace, "SF Mono", Menlo, Monaco, monospace;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #0d0d0d;
+    --fg: #e5e5e5;
+    --muted: #888;
+    --border: #333;
+  }
+}
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  line-height: 1.5;
+}
+
+/* ============================================
+   Navigation
+   ============================================ */
+
+.www-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.75rem 2rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 0.875rem;
+}
+
+.www-nav a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.www-nav .prev::before {
+  content: "← ";
+  opacity: 0.5;
+}
+
+.www-nav .next::after {
+  content: " →";
+  opacity: 0.5;
+}
+
+.www-nav .current {
+  font-weight: 600;
+}
+
+.www-nav .current a {
+  opacity: 0.7;
+}
+
+.www-nav .current a:hover {
+  opacity: 1;
+}
+
+/* ============================================
+   Single Column Page Layout
+   ============================================ */
+
+.page {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.page-header {
+  margin-bottom: 3rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.page-header h1 {
+  margin: 0 0 0.5rem 0;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+.page-header p {
+  margin: 0;
+  color: var(--muted);
+}
+
+.section {
+  margin-bottom: 3rem;
+}
+
+.section h2 {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin: 0 0 1.5rem 0;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid var(--border);
+  font-size: 1.25rem;
+}
+
+/* ============================================
+   Light/Dark Split Layout (html-css only)
+   ============================================ */
+
+.expose-header {
+  display: flex;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  border-bottom: 1px solid var(--border);
+}
+
+.expose-header > div {
+  flex: 1;
+  padding: 0.75rem 2rem;
+  font-weight: 600;
+  font-size: 0.875rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.header-light {
+  background: #fff;
+  color: #333;
+}
+
+.header-dark {
+  background: #0d0d0d;
+  color: #e5e5e5;
+}
+
+.expose {
+  width: 100%;
+}
+
+.row {
+  display: flex;
+  border-bottom: 1px solid var(--border);
+}
+
+.cell {
+  flex: 1;
+  padding: 2rem;
+  min-width: 0;
+}
+
+.cell.light {
+  background: #ffffff;
+  color: #1a1a1a;
+  color-scheme: light;
+}
+
+.cell.dark {
+  background: #0d0d0d;
+  color: #e5e5e5;
+  color-scheme: dark;
+}
+
+.section-title {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0.75rem;
+  margin-bottom: 1.5rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 1px solid currentColor;
+  opacity: 0.8;
+}
+
+.section-title h2 {
+  margin: 0;
+  font-size: 1.25rem;
+}
+
+.element-group {
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  border: 1px dashed currentColor;
+  border-radius: 4px;
+  opacity: 0.4;
+}
+
+.element-group:hover {
+  opacity: 1;
+}
+
+.group-label {
+  font-family: var(--mono);
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  opacity: 0.6;
+  margin-bottom: 0.75rem;
+  display: block;
+}
+
+/* ============================================
+   Spec Labels
+   ============================================ */
+
+.spec-label {
+  font-family: var(--mono);
+  font-size: 0.7rem;
+  opacity: 0.5;
+  padding: 0.15rem 0.4rem;
+  border: 1px solid currentColor;
+  border-radius: 3px;
+  white-space: nowrap;
+  font-weight: normal;
+}
+
+/* ============================================
+   Diagrams (SVG)
+   ============================================ */
+
+.diagram {
+  margin: 1.5rem 0;
+  overflow-x: auto;
+}
+
+.diagram svg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.diagram text {
+  font-family: var(--mono);
+  font-size: 11px;
+  fill: currentColor;
+  dominant-baseline: middle;
+}
+
+.diagram .label {
+  font-size: 8px;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.diagram rect,
+.diagram line,
+.diagram path {
+  stroke: currentColor;
+  fill: none;
+}
+
+.diagram .filled {
+  fill: currentColor;
+  opacity: 0.08;
+}
+
+/* ============================================
+   Tables
+   ============================================ */
+
+.defaults-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  margin: 1rem 0;
+}
+
+.defaults-table th,
+.defaults-table td {
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  vertical-align: middle;
+  border-bottom: 1px solid var(--border);
+}
+
+.defaults-table th {
+  font-weight: 600;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--muted);
+}
+
+.defaults-table code {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+}
+
+/* ============================================
+   Bytes / Raw Text
+   ============================================ */
+
+.bytes {
+  font-family: var(--mono);
+  font-size: 0.8rem;
+  line-height: 1.6;
+  padding: 1rem;
+  background: currentColor;
+  background: color-mix(in srgb, currentColor 5%, transparent);
+  border-radius: 4px;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+/* ============================================
+   File Tree
+   ============================================ */
+
+.file-tree {
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  line-height: 2;
+  margin: 0;
+}
+
+.file-tree a {
+  color: inherit;
+  text-decoration: none;
+  opacity: 0.7;
+}
+
+.file-tree a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
